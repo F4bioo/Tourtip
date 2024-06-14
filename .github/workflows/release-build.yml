@@ -111,8 +111,8 @@ jobs:
 
       - name: Move Builds Files to build-artifacts
         run: |
-          mv app/build/outputs/apk/release/app-release-unsigned.apk build-artifacts/tourtip-sample-v${{ env.VERSION_NAME }}-unsigned.apk
-          mv tourtip/build/outputs/aar/tourtip-release.aar build-artifacts/tourtip-v${{ env.VERSION_NAME }}.aar
+          mv app/build/outputs/apk/release/app-release-unsigned.apk build-artifacts/app-release-unsigned.apk
+          mv tourtip/build/outputs/aar/tourtip-release.aar build-artifacts/tourtip-release.aar
 
       - name: Read Release Tag File
         run: echo "RELEASE_TAG=$(cat version-artifacts/release_tag.txt)" >> $GITHUB_ENV
@@ -196,8 +196,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build-artifacts/tourtip-sample-v${{ env.VERSION_NAME }}-unsigned.apk
-          asset_name: tourtip-sample-v${{ env.VERSION_NAME }}-unsigned.apk
+          asset_path: build-artifacts/*.apk
+          asset_name: tourtip-sample-v${{ env.RELEASE_TAG }}-unsigned.apk
           asset_content_type: application/vnd.android.package-archive
 
       - name: Upload AAR Release Asset
@@ -206,6 +206,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build-artifacts/tourtip-v${{ env.VERSION_NAME }}.aar
-          asset_name: tourtip-v${{ env.VERSION_NAME }}.aar
+          asset_path: build-artifacts/*.aar
+          asset_name: tourtip-v${{ env.RELEASE_TAG }}.aar
           asset_content_type: application/java-archive
