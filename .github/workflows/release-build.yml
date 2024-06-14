@@ -1,4 +1,4 @@
-name: Release Plugin
+name: Release Build
 
 on:
   push:
@@ -17,21 +17,68 @@ jobs:
             exit 1
           fi
 
-  build-and-release-plugin:
+  check_job_flag:
+    name: Check Job Flag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Should Create Release
+        run: |
+          echo "Current Job Flag value is: ${{ vars.SHOULD_CREATE_RELEASE }}"
+
+  app-version:
     needs: check-actor
-    name: Build and Release Plugin
+    if: ${{ vars.SHOULD_CREATE_RELEASE == 'true' }}
+    name: App Version
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Read Config File
+        run: |
+          echo "VERSION_CODE=$(grep 'const val versionCode' buildSrc/src/main/java/Config.kt | awk -F '=' '{print $2}' | tr -d ' ')" >> $GITHUB_ENV
+          echo "VERSION_NAME=$(grep 'const val versionName' buildSrc/src/main/java/Config.kt | awk -F '=' '{print $2}' | tr -d ' \"')" >> $GITHUB_ENV
+
+      - name: Create Release Tag
+        run: echo "RELEASE_TAG=${{ env.VERSION_NAME }}(b${{ env.VERSION_CODE }})" >> $GITHUB_ENV
+
+      - name: Create Version Artifacts Folder
+        run: mkdir -p version-artifacts
+
+      - name: Create Version Code File
+        run: echo "${{ env.VERSION_CODE }}" > $GITHUB_WORKSPACE/version-artifacts/version_code.txt
+
+      - name: Create Version Name File
+        run: echo "${{ env.VERSION_NAME }}" > $GITHUB_WORKSPACE/version-artifacts/version_name.txt
+
+      - name: Create Release Tag File
+        run: echo "${{ env.RELEASE_TAG }}" > $GITHUB_WORKSPACE/version-artifacts/release_tag.txt
+
+      - name: List Upload Version Artifacts
+        run: ls -l version-artifacts
+
+      - name: Upload Version Artifacts
+        uses: actions/upload-artifact@v3
         with:
-          fetch-depth: 0
+          retention-days: 1
+          name: app-version
+          path: version-artifacts
+
+  app-build:
+    needs: app-version
+    name: App Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Cache Gradle dependencies
         uses: actions/cache@v2
         with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
 
       - name: Set up JDK 17
@@ -43,14 +90,64 @@ jobs:
       - name: Grant Gradlew Permission
         run: chmod +x gradlew
 
-      - name: Read Gradle Version
-        id: gradle_version
-        run: |
-          VERSION=$(grep 'version = ' build.gradle.kts | sed 's/.*"\(.*\)".*/\1/')
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+      - name: Download App Version Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: app-version
+          path: version-artifacts
 
-      - name: Build Plugin
-        run: ./gradlew buildPlugin
+      - name: Build APK
+        run: ./gradlew assembleRelease
+
+      - name: Read Version Name File
+        run: echo "VERSION_NAME=$(cat version-artifacts/version_name.txt)" >> $GITHUB_ENV
+
+      - name: Create App Build Artifacts Folder
+        run: mkdir -p build-artifacts
+
+      - name: Move Builds Files to build-artifacts
+        run: |
+          mv app/build/outputs/apk/release/app-release.apk build-artifacts/Tourtip-Sample-v${{ env.VERSION_NAME }}-release.apk      
+
+      - name: Read Release Tag File
+        run: echo "RELEASE_TAG=$(cat version-artifacts/release_tag.txt)" >> $GITHUB_ENV
+
+      - name: List Upload App Build Artifacts
+        run: ls -l build-artifacts
+
+      - name: Upload App Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          retention-days: 1
+          name: app-build
+          path: build-artifacts
+
+  app-deploy:
+    needs: app-build
+    name: App Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Download App Version Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: app-version
+          path: version-artifacts
+
+      - name: Download App Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: app-build
+
+      - name: List Download App Version Artifacts
+        run: ls -l version-artifacts
+
+      - name: List Download App Build Artifact
+        run: ls -l build-artifacts
 
       - name: Create Release Notes
         run: |
@@ -72,18 +169,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ env.VERSION }}
-          release_name: v${{ env.VERSION }}
+          tag_name: v${{ env.RELEASE_TAG }}
+          release_name: v${{ env.RELEASE_TAG }}
           body_path: FINAL_RELEASE_NOTES.md
           draft: false
           prerelease: false
 
-      - name: Upload Plugin Release Asset
+      - name: Upload APK Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/distributions/DiffLinesCounter-${{ env.VERSION }}.zip
-          asset_name: DiffLinesCounter-${{ env.VERSION }}.zip
-          asset_content_type: application/zip
+          asset_path: build-artifacts/Tourtip-Sample-v${{ env.VERSION_NAME }}-release.apk
+          asset_name: Tourtip-Sample-v${{ env.VERSION_NAME }}-release.apk
+          asset_content_type: application/vnd.android.package-archive
