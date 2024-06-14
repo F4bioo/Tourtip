@@ -18,7 +18,7 @@ Add the following dependency to your `build.gradle.kts` file on app module:
 
 ```kotlin
 dependencies {
-    implementation("com.fappslab.tourtip:tourtip:$VERSION_NAME")
+    implementation("com.fappslab.tourtip:tourtip:1.2024.06.14")
 }
 ```
 <!-- end dependency -->
