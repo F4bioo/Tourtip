@@ -1,8 +1,8 @@
 # Tourtip
-Tourtip is a guided tour library for Android applications, built using Jetpack Compose. This library allows you to create customizable tooltips that guide users through various features of your app.
+Tourtip is a guided tour library for Android applications, built using Jetpack Compose. This library allows you to create customizable tooltips/bubbles that guide users through various features of your app.
 
 ## Features
-- **Customizable Tooltips:** Easily create tooltips with custom styles, positions, and animations.
+- **Customizable Tooltips:** Easily create bubbles with custom styles, positions, and animations.
 - **Step-by-Step Guidance:** Provide users with step-by-step instructions to enhance their onboarding experience.
 - **Compose Integration:** Built with Jetpack Compose for seamless integration into your Compose UI.
 
@@ -112,11 +112,12 @@ TourtipLayout(
 ## Contributing
 We welcome contributions! If you'd like to contribute to Tourtip, please follow these steps:
 1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/my-feature`).
+2. Create a new branch from `develop` (`git checkout -b feature/my-amazing-feature`).
 3. Make your changes.
-4. Commit your changes (`git commit -am 'Changed: my feature'`).
-5. Push to the branch (`git push origin feature/my-feature`).
-6. Create a new Pull Request.
+4. Commit your changes (`git commit -m 'Changed: My amazing feature'`).
+5. Push to the branch (`git push origin feature/my-amazing-feature`).
+6. Create a new Pull Request to the `develop` branch.
+
 
 ## License
 Tourtip is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
