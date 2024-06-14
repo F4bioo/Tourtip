@@ -17,7 +17,7 @@ except FileNotFoundError:
     exit(1)
 
 # Get the current date and year
-current_date = datetime.now().strftime("%Y.%m.%d")
+current_month = datetime.now().strftime("%m")
 current_year = int(datetime.now().strftime("%Y"))
 
 # Calculate the difference in years from the first release
@@ -43,7 +43,7 @@ for line in lines:
     if VERSION_CODE in line:
         updated_lines.append(f"    {VERSION_CODE}: Int = {new_version_code}")
     elif VERSION_NAME in line:
-        updated_lines.append(f"    {VERSION_NAME}: String = \"{new_prefix}.{current_date}\"")
+        updated_lines.append(f"    {VERSION_NAME}: String = \"{new_prefix}.{current_month}\"")
     else:
         updated_lines.append(line.rstrip('\n'))
 
