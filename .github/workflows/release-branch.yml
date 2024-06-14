@@ -60,10 +60,17 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-      - name: Push Bumped File to develop
+      - name: Commit and Push Bumped File to develop
         run: |
           git add buildSrc/src/main/java/Config.kt
           git commit -m "Changed: Bump app version v${{ env.VERSION_NAME }} build ${{ env.VERSION_CODE }}"
+          git push -u origin develop
+
+      - name: Commit and Push README File to develop
+        run: |
+          sed -i '/<!-- start dependency -->/,/<!-- end dependency -->/s/\$VERSION_NAME/${{ env.VERSION_NAME }}/g' README.md
+          git add README.md
+          git commit -m "Changed: Update README with version v${{ env.VERSION_NAME }}"
           git push -u origin develop
 
       - name: Create Release Branch

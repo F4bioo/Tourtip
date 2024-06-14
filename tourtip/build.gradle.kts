@@ -19,9 +19,9 @@ publishing {
             afterEvaluate {
                 from(components["release"])
             }
-            groupId = Config.groupId
             artifactId = Config.artifactId
-            version = Config.versionName
+            groupId = Config.groupId
+            version = Config.version
         }
     }
     repositories {
