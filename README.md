@@ -9,7 +9,7 @@ Add the following dependency to your `build.gradle` file on app module:
 
 ```gradle
 dependencies {
-    implementation 'com.fappslab.tourtip:tourtip:1.2024.06.14.10'
+    implementation 'com.fappslab.tourtip:tourtip:1.06.11'
 }
 ```
 
@@ -18,7 +18,7 @@ Add the following dependency to your `build.gradle.kts` file on app module:
 
 ```kotlin
 dependencies {
-    implementation("com.fappslab.tourtip:tourtip:1.2024.06.14.10")
+    implementation("com.fappslab.tourtip:tourtip:1.06.11")
 }
 ```
 <!-- end dependency -->
