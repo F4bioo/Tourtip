@@ -4,6 +4,8 @@ Tourtip is a guided tour library for Android applications, built using Jetpack C
 allows you to create customizable tooltips/bubbles that guide users through various features of your
 app.
 
+![tourtip-sample.gif](doc/screen/tourtip-sample.gif)
+
 ## Features
 - **Customizable Tooltips:** Easily create bubbles with custom styles, positions, and animations.
 - **Step-by-Step Guidance:** Provide users with step-by-step instructions to enhance their
