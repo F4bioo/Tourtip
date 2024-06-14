@@ -5,8 +5,8 @@ object Config {
     const val applicationId: String = packageName
     const val minSdk: Int = 21
     const val targetSdk: Int = 34
-    const val versionCode: Int = 406141706
-    const val versionName: String = "1.2024.06.14"
+    const val versionCode: Int = 1
+    const val versionName: String = "1.2024.06.14.1"
 
     val artifactId: String
         get() = packageName.substringAfterLast(delimiter = ".")

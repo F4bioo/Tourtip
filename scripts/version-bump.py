@@ -23,17 +23,16 @@ current_year = int(datetime.now().strftime("%Y"))
 # Calculate the difference in years from the first release
 year_difference = current_year - FIRST_RELEASE_YEAR
 
-# Generate versionCode based on the current year, month, day, hour, and minute
-# Take the current year, subtract 2020, then multiply by 100,000,000 (shifts 8 digits)
-# Add month * 1,000,000 (shifts 6 digits), day * 10,000 (shifts 4 digits),
-# hour * 100 (shifts 2 digits), and minute
-year_offset = (current_year - 2020) * 100_000_000
-month = int(datetime.now().strftime("%m"))
-day = int(datetime.now().strftime("%d"))
-hour = int(datetime.now().strftime("%H"))
-minute = int(datetime.now().strftime("%M"))
+# Extract the current versionCode and increment it
+version_code_pattern = re.compile(r'const val versionCode: Int = (\d+)')
+version_code_match = version_code_pattern.search(''.join(lines))
+if version_code_match:
+    current_version_code = int(version_code_match.group(1))
+else:
+    print("Error: versionCode not found in the file.")
+    exit(1)
 
-versionCode_new = year_offset + month * 1000000 + day * 10000 + hour * 100 + minute
+new_version_code = current_version_code + 1
 
 # Find the current version prefix and update if necessary
 new_prefix = str(year_difference + 1)
@@ -42,7 +41,7 @@ new_prefix = str(year_difference + 1)
 updated_lines = []
 for line in lines:
     if VERSION_CODE in line:
-        updated_lines.append(f"    {VERSION_CODE}: Int = {versionCode_new}")
+        updated_lines.append(f"    {VERSION_CODE}: Int = {new_version_code}")
     elif VERSION_NAME in line:
         updated_lines.append(f"    {VERSION_NAME}: String = \"{new_prefix}.{current_date}\"")
     else:
