@@ -5,8 +5,8 @@ object Config {
     const val applicationId: String = packageName
     const val minSdk: Int = 21
     const val targetSdk: Int = 34
-    const val versionCode: Int = 1
-    const val versionName: String = "1.0"
+    const val versionCode: Int = 406140454
+    const val versionName: String = "2.2024.06.14"
 
     const val groupId: String = packageName
     const val artifactId: String = "tourtip"
