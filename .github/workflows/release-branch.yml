@@ -66,12 +66,20 @@ jobs:
           git commit -m "Changed: Bump app version v${{ env.VERSION_NAME }} build ${{ env.VERSION_CODE }}"
           git push -u origin develop
 
-      - name: Commit and Push README File to develop
+      - name: Create a temporary README file
         run: |
-          sed -i '/<!-- start dependency -->/,/<!-- end dependency -->/s|\$VERSION_NAME|${{ env.VERSION_NAME }}.${{ env.VERSION_CODE }}|g' README.md
-          git add README.md
+          cp README.md README_temp.md
+
+      - name: Commit and Push temporary README File to develop
+        run: |
+          sed -i '/<!-- start dependency -->/,/<!-- end dependency -->/s|\$VERSION_NAME|${{ env.VERSION_NAME }}.${{ env.VERSION_CODE }}|g' README_temp.md
+          git add README_temp.md
           git commit -m "Changed: Update README with version v${{ env.VERSION_NAME }} build ${{ env.VERSION_CODE }}"
           git push -u origin develop
+
+      - name: Clean up temporary README file
+        run: |
+          rm README_temp.md
 
       - name: Create Release Branch
         run: |
