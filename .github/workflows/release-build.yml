@@ -146,7 +146,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: app-build
-          path: .
+          path: build-artifacts
 
       - name: List Download App Version Artifacts
         run: ls -l version-artifacts
