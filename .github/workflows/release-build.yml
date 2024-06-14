@@ -41,8 +41,7 @@ jobs:
           echo "VERSION_NAME=$(grep 'const val versionName' buildSrc/src/main/java/Config.kt | awk -F '=' '{print $2}' | tr -d ' \"')" >> $GITHUB_ENV
 
       - name: Create Release Tag
-        #run: echo "RELEASE_TAG=${{ env.VERSION_NAME }}(b${{ env.VERSION_CODE }})" >> $GITHUB_ENV
-        run: echo "RELEASE_TAG=${{ env.VERSION_NAME }}" >> $GITHUB_ENV
+        run: echo "RELEASE_TAG=${{ env.VERSION_NAME }}.${{ env.VERSION_CODE }}" >> $GITHUB_ENV
 
       - name: Create Version Artifacts Folder
         run: mkdir -p version-artifacts
