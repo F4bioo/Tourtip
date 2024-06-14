@@ -38,8 +38,6 @@ dependencies {
 To start using Tourtip, initialize the library in your Compose setup.
 
 ```kotlin
-import com.fappslab.tourtip.compose.TourtipLayout
-
 // Initialize Tourtip in your Composable
 TourtipLayout(
     onBack = { currentStep ->
@@ -69,10 +67,6 @@ TourtipLayout(
 Create a bubble to guide users through specific features of your app.
 
 ```kotlin
-import com.fappslab.tourtip.compose.extension.bubbleAnchor
-import com.fappslab.tourtip.model.BubbleDetail
-import com.fappslab.tourtip.model.HighlightType
-
 // Example how to attach a bubble to a Text composable
 Text(
     modifier = Modifier
@@ -94,10 +88,6 @@ Text(
 Customize the appearance and behavior of bubbles to fit your app's design.
 
 ```kotlin
-import androidx.compose.ui.graphics.Color
-import com.fappslab.tourtip.model.TourtipAnimType
-import com.fappslab.tourtip.theme.defaults.TourtipDefaults
-
 TourtipLayout(
     animType = TourtipAnimType.Bouncy,
     scrimColor = Color.Blue.copy(alpha = 0.5f), // Optional scrim color
@@ -149,7 +139,6 @@ TourtipLayout(
         Text("Start Tour")
     }
 }
-
 ```
 
 ## Contributing
