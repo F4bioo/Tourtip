@@ -1,0 +1,59 @@
+name: Check Title
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+    branches:
+      - develop
+
+jobs:
+  check-title:
+    name: Check PR Title
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Generate Error Details
+        run: python scripts/check-title.py
+
+      - name: Check and Comment PR Title
+        id: check-and-comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          echo "PR title: $PR_TITLE"
+
+          TAG=$(echo "$PR_TITLE" | cut -d':' -f1 | xargs)
+          export TAG
+          DESCRIPTION=$(echo "$PR_TITLE" | cut -d':' -f2-)
+          export DESCRIPTION
+
+          echo "Extracted TAG: $TAG"
+          echo "Extracted DESCRIPTION: $DESCRIPTION"
+
+          ACCEPTED_SUFFIXES=$(awk 'NF && $0 !~ /^ *$/ { $1=$1; print }' .github/markdown/check-title-accepted-suffixes.md | awk 'BEGIN { ORS = "|" } { print }' | sed 's/| $//')
+          echo "Accepted Suffixes: $ACCEPTED_SUFFIXES"
+
+          ERROR_MESSAGE=""
+          if [[ ! "$TAG" =~ ^(${ACCEPTED_SUFFIXES})$ ]]; then
+            ERROR_MESSAGE=$(envsubst < .github/markdown/formatted-check-title-error-message-tag.md)
+          elif [[ ! "$PR_TITLE" =~ ^(${ACCEPTED_SUFFIXES}):\  ]]; then
+            ERROR_MESSAGE=$(envsubst < .github/markdown/check-title-error-message-space.md)
+          elif [ ${#DESCRIPTION} -lt 10 ]; then
+            ERROR_MESSAGE=$(envsubst < .github/markdown/check-title-error-message-length.md)
+          fi
+
+          echo "Final ERROR_MESSAGE: $ERROR_MESSAGE"
+
+          if [[ -n "$ERROR_MESSAGE" ]]; then
+            gh pr comment "${{ github.event.pull_request.number }}" --body "$ERROR_MESSAGE" --repo ${{ github.repository }}
+            exit 1
+          fi

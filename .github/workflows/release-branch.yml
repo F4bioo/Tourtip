@@ -1,0 +1,78 @@
+name: Release Branch
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check_environment:
+    name: Check Environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if Running on develop
+        run: |
+          if [[ "${{ github.ref }}" != "refs/heads/develop" ]]; then
+            echo "This workflow can only be run on the develop branch. Exiting."
+            exit 1
+          fi
+
+      - name: Check Authorized User
+        run: |
+          if [[ "${{ github.actor }}" != "F4bioo" ]]; then
+            echo "Unauthorized user. Exiting."
+            exit 1
+          fi
+
+  create-release-branch:
+    needs: check_environment
+    name: Create Release Branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: develop
+          token: ${{ secrets.MY_GH_TOKEN }}
+
+      - name: Pull Latest Changes From develop
+        run: |
+          git pull --rebase origin develop
+
+      - name: Generate version details
+        run: python scripts/version-bump.py
+
+      - name: Read Config File
+        id: version_details
+        run: |
+          echo "VERSION_CODE=$(grep 'const val versionCode' buildSrc/src/main/java/Config.kt | awk -F '=' '{print $2}' | tr -d ' ')" >> $GITHUB_ENV
+          echo "VERSION_NAME=$(grep 'const val versionName' buildSrc/src/main/java/Config.kt | awk -F '=' '{print $2}' | tr -d ' \"')" >> $GITHUB_ENV
+
+      - name: Create Release Branch Name
+        run: |
+          echo "RELEASE_BRANCH=release/${{ env.VERSION_NAME }}_${{ env.VERSION_CODE }}" >> $GITHUB_ENV
+
+      - name: Setup Git Local Configs
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Push Bumped File to develop
+        run: |
+          git add buildSrc/src/main/java/Config.kt
+          git commit -m "Changed: Bump app version v${{ env.VERSION_NAME }} build ${{ env.VERSION_CODE }}"
+          git push -u origin develop
+
+      - name: Create Release Branch
+        run: |
+          git checkout -b ${{ env.RELEASE_BRANCH }}
+          git push -u origin ${{ env.RELEASE_BRANCH }}
+
+      - name: Create Release Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create --base master --head ${{ env.RELEASE_BRANCH }} --title "Deploy: Merge final release v${{ env.VERSION_NAME }} build ${{ env.VERSION_CODE }}" --body "This PR includes the latest version for release v${{ env.VERSION_NAME }} build ${{ env.VERSION_CODE }}" --reviewer "F4bioo"

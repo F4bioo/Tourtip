@@ -7,4 +7,7 @@ object Config {
     const val targetSdk: Int = 34
     const val versionCode: Int = 1
     const val versionName: String = "1.0"
+
+    const val groupId: String = packageName
+    const val artifactId: String = "tourtip"
 }

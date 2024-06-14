@@ -75,7 +75,6 @@ private fun DrawScope.calculateAdjustedBounds(
     )
 }
 
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun FocusOverlayComponentPreview() {

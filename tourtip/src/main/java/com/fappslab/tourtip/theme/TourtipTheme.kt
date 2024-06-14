@@ -12,14 +12,12 @@ import com.fappslab.tourtip.theme.defaults.LocalPlutoSizing
 internal fun TourtipTheme(
     content: @Composable () -> Unit
 ) {
-
     CompositionLocalProvider(
         LocalPlutoOpacity provides Opacity,
         LocalPlutoRadius provides Radius,
         LocalPlutoSizing provides Dimens,
         LocalPlutoElevation provides Elevation
     ) {
-
         MaterialTheme(
             content = content
         )

@@ -1,0 +1,16 @@
+/.github/*          @F4bioo
+/pubkey/*           @F4bioo
+/scripts/*          @F4bioo
+/buildSrc/*         @F4bioo
+gradle.properties   @F4bioo
+gradlew             @F4bioo
+*.gitignore         @F4bioo
+*.gradle            @F4bioo
+*.md                @F4bioo
+*.kts               @F4bioo
+*.toml              @F4bioo
+*.yml               @F4bioo
+*.yaml              @F4bioo
+*.py                @F4bioo
+*.sh                @F4bioo
+*.bat               @F4bioo
