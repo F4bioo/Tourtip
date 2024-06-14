@@ -69,11 +69,11 @@ import com.fappslab.tourtip.compose.extension.bubbleAnchor
 import com.fappslab.tourtip.model.BubbleDetail
 import com.fappslab.tourtip.model.HighlightType
 
-// Example of creating a tooltip
+// Example how to attach a bubble to a Text composable
 Text(
     modifier = Modifier
         .fillMaxWidth()
-        .bubbleAnchor { // call bubbleAnchor to attach the bubble to any composable component
+        .bubbleAnchor { // to attach the bubble to any composable component
             BubbleDetail(
                 index = 0,
                 title = { Text("Step 1") },
@@ -85,7 +85,7 @@ Text(
 )
 ```
 
-### Customizing Bubbles
+### Customizing Tourtip
 Customize the appearance and behavior of bubbles to fit your app's design.
 
 ```kotlin
