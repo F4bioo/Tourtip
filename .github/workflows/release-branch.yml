@@ -68,7 +68,7 @@ jobs:
 
       - name: Commit and Push README File to develop
         run: |
-          sed -i '/<!-- start dependency -->/,/<!-- end dependency -->/s/\$VERSION_NAME/${{ env.VERSION_NAME }}.${{ env.VERSION_CODE }}/g' README.md
+          sed -i "/<!-- start dependency -->/,/<!-- end dependency -->/s|\$VERSION_NAME|${{ env.VERSION_NAME }}.${{ env.VERSION_CODE }}|g" README.md
           git add README.md
           git commit -m "Changed: Update README with version v${{ env.VERSION_NAME }} build ${{ env.VERSION_CODE }}"
           git push -u origin develop
