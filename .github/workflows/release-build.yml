@@ -99,6 +99,9 @@ jobs:
       - name: Build APK
         run: ./gradlew assembleRelease
 
+      - name: Build AAR
+        run: ./gradlew publishReleasePublicationToMavenRepository
+
       - name: Read Version Name File
         run: echo "VERSION_NAME=$(cat version-artifacts/version_name.txt)" >> $GITHUB_ENV
 
@@ -107,7 +110,8 @@ jobs:
 
       - name: Move Builds Files to build-artifacts
         run: |
-          mv app/build/outputs/apk/release/app-release.apk build-artifacts/Tourtip-Sample-v${{ env.VERSION_NAME }}-release.apk      
+          mv app/build/outputs/apk/release/app-release-unsigned.apk build-artifacts/
+          mv build/outputs/aar/*.aar build-artifacts/
 
       - name: Read Release Tag File
         run: echo "RELEASE_TAG=$(cat version-artifacts/release_tag.txt)" >> $GITHUB_ENV
@@ -181,6 +185,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build-artifacts/Tourtip-Sample-v${{ env.VERSION_NAME }}-release.apk
-          asset_name: Tourtip-Sample-v${{ env.VERSION_NAME }}-release.apk
+          asset_path: build-artifacts/*.apk
+          asset_name: Tourtip-Sample-v${{ env.VERSION_NAME }}-unsigned.apk
           asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload AAR Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build-artifacts/*.aar
+          asset_name: Tourtip-v${{ env.VERSION_NAME }}.aar
+          asset_content_type: application/java-archive
