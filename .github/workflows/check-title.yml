@@ -39,7 +39,7 @@ jobs:
           echo "Extracted TAG: $TAG"
           echo "Extracted DESCRIPTION: $DESCRIPTION"
 
-          ACCEPTED_SUFFIXES=$(awk 'NF && $0 !~ /^ *$/ { $1=$1; print }' .github/markdown/check-title-accepted-suffixes.md | awk 'BEGIN { ORS = "|" } { print }' | sed 's/| $//')
+          ACCEPTED_SUFFIXES=$(awk 'NF && $0 !~ /^ *$/ { $1=$1; print }' .github/markdown/check-title-accepted-suffixes.md | awk 'BEGIN { ORS = "|" } { print }' | sed 's/|$//')
           echo "Accepted Suffixes: $ACCEPTED_SUFFIXES"
 
           ERROR_MESSAGE=""

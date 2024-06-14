@@ -3,6 +3,6 @@ Please start your title with one of the following tags:
 $ACCEPTED_SUFFIXES
 
 Here's the expected format:
-**$TAG:** Some description here
+**Fixed:** Some description here
 
 Thank you! 🙌
