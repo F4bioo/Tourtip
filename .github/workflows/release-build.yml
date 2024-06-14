@@ -111,7 +111,7 @@ jobs:
       - name: Move Builds Files to build-artifacts
         run: |
           mv app/build/outputs/apk/release/app-release-unsigned.apk build-artifacts/
-          mv build/outputs/aar/*.aar build-artifacts/
+          mv tourtip/build/outputs/aar/*.aar build-artifacts/
 
       - name: Read Release Tag File
         run: echo "RELEASE_TAG=$(cat version-artifacts/release_tag.txt)" >> $GITHUB_ENV
