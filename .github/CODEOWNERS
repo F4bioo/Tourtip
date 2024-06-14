@@ -1,5 +1,4 @@
 /.github/*          @F4bioo
-/pubkey/*           @F4bioo
 /scripts/*          @F4bioo
 /buildSrc/*         @F4bioo
 gradle.properties   @F4bioo

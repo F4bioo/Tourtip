@@ -68,7 +68,7 @@ jobs:
 
       - name: Commit and Push README File to develop
         run: |
-          sed -i '/<!-- start dependency -->/,/<!-- end dependency -->/!b;//!d;/<!-- start dependency -->/r .github/markdown/dependency-update-version.md' README.md
+          sed -i '/<!-- start dependency -->/,/<!-- end dependency -->/!b;//!d;/<!-- start dependency -->/r .github/markdown/release-gradle-version.md' README.md
           sed -i '/<!-- start dependency -->/,/<!-- end dependency -->/s|\$VERSION_NAME|${{ env.VERSION_NAME }}.${{ env.VERSION_CODE }}|g' README.md
           git add README.md
           git commit -m "Changed: Update README with version v${{ env.VERSION_NAME }} build ${{ env.VERSION_CODE }}"
