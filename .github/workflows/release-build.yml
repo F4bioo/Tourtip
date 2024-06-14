@@ -35,6 +35,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Read Config File
+        id: version_details
         run: |
           echo "VERSION_CODE=$(grep 'const val versionCode' buildSrc/src/main/java/Config.kt | awk -F '=' '{print $2}' | tr -d ' ')" >> $GITHUB_ENV
           echo "VERSION_NAME=$(grep 'const val versionName' buildSrc/src/main/java/Config.kt | awk -F '=' '{print $2}' | tr -d ' \"')" >> $GITHUB_ENV
@@ -110,8 +111,8 @@ jobs:
 
       - name: Move Builds Files to build-artifacts
         run: |
-          mv app/build/outputs/apk/release/app-release-unsigned.apk build-artifacts/
-          mv tourtip/build/outputs/aar/tourtip-release.aar build-artifacts/
+          mv app/build/outputs/apk/release/app-release-unsigned.apk build-artifacts/tourtip-sample-v${{ env.VERSION_NAME }}-unsigned.apk
+          mv tourtip/build/outputs/aar/tourtip-release.aar build-artifacts/tourtip-v${{ env.VERSION_NAME }}.aar
 
       - name: Read Release Tag File
         run: echo "RELEASE_TAG=$(cat version-artifacts/release_tag.txt)" >> $GITHUB_ENV
@@ -154,6 +155,15 @@ jobs:
       - name: List Download App Build Artifact
         run: ls -l build-artifacts
 
+      - name: Read Version Code File
+        run: echo "VERSION_CODE=$(cat version-artifacts/version_code.txt)" >> $GITHUB_ENV
+
+      - name: Read Version Name File
+        run: echo "VERSION_NAME=$(cat version-artifacts/version_name.txt)" >> $GITHUB_ENV
+
+      - name: Read Release Tag File
+        run: echo "RELEASE_TAG=$(cat version-artifacts/release_tag.txt)" >> $GITHUB_ENV
+
       - name: Create Release Notes
         run: |
           set -e
@@ -186,7 +196,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build-artifacts/app-release-unsigned.apk
+          asset_path: build-artifacts/tourtip-sample-v${{ env.VERSION_NAME }}-unsigned.apk
           asset_name: tourtip-sample-v${{ env.VERSION_NAME }}-unsigned.apk
           asset_content_type: application/vnd.android.package-archive
 
@@ -196,6 +206,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build-artifacts/tourtip-release.aar
+          asset_path: build-artifacts/tourtip-v${{ env.VERSION_NAME }}.aar
           asset_name: tourtip-v${{ env.VERSION_NAME }}.aar
           asset_content_type: application/java-archive
