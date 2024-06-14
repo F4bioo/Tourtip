@@ -46,7 +46,7 @@ jobs:
       - name: Read Gradle Version
         id: gradle_version
         run: |
-          VERSION=$(grep -oP 'version = "\K(.*?)(?=")' build.gradle.kts)
+          VERSION=$(grep 'version = ' build.gradle.kts | sed 's/.*"\(.*\)".*/\1/')
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Build Plugin
