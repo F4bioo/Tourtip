@@ -3,3 +3,6 @@ Tourtip is a guided tour library for Android applications, built using Jetpack C
 
 Workflows testings
 - [x] Check title
+- [x] Check lint
+- [x] Check unit test
+- [x] automerge

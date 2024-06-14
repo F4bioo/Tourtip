@@ -3,7 +3,7 @@
 import re
 from datetime import datetime
 
-FIRST_RELEASE_YEAR = 2023
+FIRST_RELEASE_YEAR = 2024
 VERSION_CODE = "const val versionCode"
 VERSION_NAME = "const val versionName"
 file_path = "buildSrc/src/main/java/Config.kt"
