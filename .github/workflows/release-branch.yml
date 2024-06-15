@@ -63,16 +63,24 @@ jobs:
       - name: Commit and Push Bumped File to develop
         run: |
           git add buildSrc/src/main/java/Config.kt
-          git commit -m "Changed: Bump app version v${{ env.VERSION_NAME }} build ${{ env.VERSION_CODE }}"
-          git push -u origin develop
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to commit"
+          else
+            git commit -m "Changed: Bump app version v${{ env.VERSION_NAME }} build ${{ env.VERSION_CODE }}"
+            git push -u origin develop
+          fi      
 
       - name: Commit and Push README File to develop
         run: |
           sed -i '/<!-- start dependency -->/,/<!-- end dependency -->/!b;//!d;/<!-- start dependency -->/r .github/markdown/release-gradle-version.md' README.md
           sed -i '/<!-- start dependency -->/,/<!-- end dependency -->/s|\$VERSION_NAME|${{ env.VERSION_NAME }}.${{ env.VERSION_CODE }}|g' README.md
           git add README.md
-          git commit -m "Changed: Update README with version v${{ env.VERSION_NAME }} build ${{ env.VERSION_CODE }}"
-          git push -u origin develop
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to commit"
+          else
+            git commit -m "Changed: Update README with version v${{ env.VERSION_NAME }} build ${{ env.VERSION_CODE }}"
+            git push -u origin develop
+          fi      
 
       - name: Create Release Branch
         run: |
