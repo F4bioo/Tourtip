@@ -2,8 +2,8 @@ package com.fappslab.tourtip.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import boundsStub
-import bubbleDetailStub
+import utils.boundsStub
+import utils.tooltipModelStub
 import com.fappslab.tourtip.model.HighlightType
 import com.fappslab.tourtip.model.OverlayModel
 import com.fappslab.tourtip.model.StepModel
@@ -43,15 +43,15 @@ internal class TourtipViewModelTest {
     fun `Given updateBounds When is invoked Then should expose expected state`() = runTest {
         // Given
         val bounds = boundsStub()
-        val bubbleDetail = bubbleDetailStub(index = 1)
+        val model = tooltipModelStub(index = 1)
         val expectedState = initialState.copy(
             indexedBounds = mapOf(1 to bounds),
             highlightTypes = mapOf(1 to HighlightType.Rounded),
-            bubbleDetails = mapOf(1 to bubbleDetail)
+            tooltipModels = mapOf(1 to model)
         )
 
         // When
-        subject.updateBounds(bubbleDetail, bounds)
+        subject.updateBounds(model, bounds)
 
         // Then
         subject.state.test {
@@ -91,12 +91,12 @@ internal class TourtipViewModelTest {
     fun `Given loadSteps When is invoked Then should expose expected state`() = runTest {
         // Given
         val bounds = boundsStub()
-        val bubbleDetail = bubbleDetailStub(index = 1)
-        subject.updateBounds(bubbleDetail, bounds)
+        val model = tooltipModelStub(index = 1)
+        subject.updateBounds(model, bounds)
         val expectedState = initialState.copy(
             indexedBounds = mapOf(1 to bounds),
             highlightTypes = mapOf(1 to HighlightType.Rounded),
-            bubbleDetails = mapOf(1 to bubbleDetail)
+            tooltipModels = mapOf(1 to model)
         )
 
         // When
@@ -112,16 +112,16 @@ internal class TourtipViewModelTest {
     fun `Given onNext When is invoked Then should expose expected state`() = runTest {
         // Given
         val bounds = boundsStub()
-        val bubbleDetail1 = bubbleDetailStub(index = 0)
-        val bubbleDetail2 = bubbleDetailStub(index = 1)
+        val model1 = tooltipModelStub(index = 0)
+        val model2 = tooltipModelStub(index = 1)
         subject.startTourtip()
-        subject.updateBounds(bubbleDetail1, bounds)
-        subject.updateBounds(bubbleDetail2, bounds)
+        subject.updateBounds(model1, bounds)
+        subject.updateBounds(model2, bounds)
         val expectedState = initialState.copy(
             currentStep = 1,
             indexedBounds = mapOf(0 to bounds, 1 to bounds),
             highlightTypes = mapOf(0 to HighlightType.Rounded, 1 to HighlightType.Rounded),
-            bubbleDetails = mapOf(0 to bubbleDetail1, 1 to bubbleDetail2),
+            tooltipModels = mapOf(0 to model1, 1 to model2),
             overlayModel = OverlayModel(targetBounds = bounds),
             isVisible = true
         )
@@ -139,17 +139,17 @@ internal class TourtipViewModelTest {
     fun `Given onBack When is invoked Then should expose expected state`() = runTest {
         // Given
         val bounds = boundsStub()
-        val bubbleDetail1 = bubbleDetailStub(index = 0)
-        val bubbleDetail2 = bubbleDetailStub(index = 1)
+        val model1 = tooltipModelStub(index = 0)
+        val model2 = tooltipModelStub(index = 1)
         subject.startTourtip()
-        subject.updateBounds(bubbleDetail1, bounds)
-        subject.updateBounds(bubbleDetail2, bounds)
+        subject.updateBounds(model1, bounds)
+        subject.updateBounds(model2, bounds)
         subject.onNext()
         subject.onNext()
         val expectedState = initialState.copy(
             indexedBounds = mapOf(0 to bounds, 1 to bounds),
             highlightTypes = mapOf(0 to HighlightType.Rounded, 1 to HighlightType.Rounded),
-            bubbleDetails = mapOf(0 to bubbleDetail1, 1 to bubbleDetail2),
+            tooltipModels = mapOf(0 to model1, 1 to model2),
             overlayModel = OverlayModel(targetBounds = bounds),
             stepModel = StepModel(currentStep = 1, totalSteps = 2)
         )

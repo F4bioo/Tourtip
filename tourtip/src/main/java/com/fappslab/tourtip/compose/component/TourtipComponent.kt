@@ -42,17 +42,17 @@ internal fun TourtipComponent(
                     overlayModel = state.overlayModel,
                     onClickOut = { onClickOut?.let { it(state.currentStep); viewModel.onEnd() } }
                 )
-                BubbleComponent(
+                TooltipComponent(
                     animType = animType,
                     stepModel = state.stepModel,
                     onClose = onClose?.let { { it(state.currentStep); viewModel.onEnd() } },
                     onBack = { onBack(state.currentStep); viewModel.onBack() },
                     onNext = { onNext(state.currentStep); viewModel.onNext() },
-                    title = state.bubbleDetails[state.currentStep]?.title,
-                    message = state.bubbleDetails[state.currentStep]?.message ?: {},
+                    title = state.tooltipModels[state.currentStep]?.title,
+                    message = state.tooltipModels[state.currentStep]?.message ?: {},
                     targetBounds = state.overlayModel.targetBounds,
                     backgroundColor = backgroundColor,
-                    action = state.bubbleDetails[state.currentStep]?.action?.let { action ->
+                    action = state.tooltipModels[state.currentStep]?.action?.let { action ->
                         { action.invoke(viewModel) }
                     }
                 )

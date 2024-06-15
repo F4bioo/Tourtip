@@ -1,13 +1,13 @@
 # Tourtip
 
 Tourtip is a guided tour library for Android applications, built using Jetpack Compose. This library
-allows you to create customizable tooltips/bubbles that guide users through various features of your
+allows you to create customizable tooltips that guide users through various features of your
 app.
 
 ![tourtip-sample.gif](doc/screen/tourtip-sample.gif)
 
 ## Features
-- **Customizable Tooltips:** Easily create bubbles with custom styles, positions, and animations.
+- **Customizable Tooltips:** Easily create tooltips with custom styles, positions, and animations.
 - **Step-by-Step Guidance:** Provide users with step-by-step instructions to enhance their
   onboarding experience.
 - **Compose Integration:** Built with Jetpack Compose for seamless integration into your Compose UI.
@@ -65,16 +65,16 @@ TourtipLayout(
 }
 ```
 
-### Creating a BubbleDetail
-Create a bubble to guide users through specific features of your app.
+### Creating a TooltipModel
+Create a tooltip to guide users through specific features of your app.
 
 ```kotlin
-// Example how to attach a bubble to a Text composable
+// Example how to attach a tooltip to a Text composable
 Text(
     modifier = Modifier
         .fillMaxWidth()
-        .bubbleAnchor { // Attach the bubble to any composable component.
-            BubbleDetail(
+        .tooltipAnchor { // Attach the tooltip to any composable component.
+            TooltipModel(
                 index = 0,
                 title = { Text("Step 1") },
                 message = { Text("This is the first step of the tour.") },
@@ -87,7 +87,7 @@ Text(
 ```
 
 ### Customizing Tourtip
-Customize the appearance and behavior of bubbles to fit your app's design.
+Customize the appearance and behavior of tooltips to fit your app's design.
 
 ```kotlin
 TourtipLayout(
@@ -99,8 +99,8 @@ TourtipLayout(
     Text(
         modifier = Modifier
             .fillMaxWidth()
-            .bubbleAnchor {
-                BubbleDetail(
+            .tooltipAnchor {
+                TooltipModel(
                     index = 0, // You can use the index to control the order of the balloons. The index does not need to be sequential but must be unique and positive.
                     title = { Text("Step 1") },
                     message = { Text("This is the first step of the tour.") },
@@ -114,14 +114,14 @@ TourtipLayout(
     Text(
         modifier = Modifier
             .fillMaxWidth()
-            .bubbleAnchor {
-                BubbleDetail(
+            .tooltipAnchor {
+                TooltipModel(
                     index = 1,
                     title = { Text("Step 2") },
                     message = { Text("This is the last step of the tour.") },
                     highlightType = HighlightType.Rounded,
                     action = { controller ->
-                        Button( // You use any composable component to define the action of the last bubble.
+                        Button( // You use any composable component to define the action of the last tooltip.
                             onClick = {
                                 controller.finishTourtip()
                             }

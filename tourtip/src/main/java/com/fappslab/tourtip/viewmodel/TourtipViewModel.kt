@@ -3,7 +3,7 @@ package com.fappslab.tourtip.viewmodel
 import androidx.compose.ui.geometry.Rect
 import androidx.lifecycle.ViewModel
 import com.fappslab.tourtip.model.BoundsRegistry
-import com.fappslab.tourtip.model.BubbleDetail
+import com.fappslab.tourtip.model.TooltipModel
 import com.fappslab.tourtip.model.StepModel
 import com.fappslab.tourtip.model.TourtipController
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,12 +22,12 @@ internal class TourtipViewModel : ViewModel(), TourtipController, BoundsRegistry
     private fun stepModelHandler() = currentState.run {
         val stepModel = StepModel(
             currentStep = currentStep.inc(),
-            totalSteps = bubbleDetails.size
-        ).takeIf { currentStep < bubbleDetails.size.dec() }
+            totalSteps = tooltipModels.size
+        ).takeIf { currentStep < tooltipModels.size.dec() }
         _state.update { it.copy(stepModel = stepModel) }
     }
 
-    override fun updateBounds(model: BubbleDetail, bounds: Rect) {
+    override fun updateBounds(model: TooltipModel, bounds: Rect) {
         _state.update { it.updateBoundsState(model, bounds) }
     }
 
@@ -39,8 +39,8 @@ internal class TourtipViewModel : ViewModel(), TourtipController, BoundsRegistry
     override fun finishTourtip() = onEnd()
 
     fun loadSteps() = currentState.run {
-        val firstIndex = bubbleDetails.keys.minOrNull() ?: return
-        val firstDetail = bubbleDetails[firstIndex] ?: return
+        val firstIndex = tooltipModels.keys.minOrNull() ?: return
+        val firstDetail = tooltipModels[firstIndex] ?: return
         val firstBounds = indexedBounds[firstIndex] ?: return
         updateBounds(firstDetail, firstBounds)
     }

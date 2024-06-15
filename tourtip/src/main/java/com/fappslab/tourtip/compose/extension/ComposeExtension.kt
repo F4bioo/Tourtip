@@ -11,27 +11,27 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.fappslab.tourtip.model.BubbleDetail
+import com.fappslab.tourtip.model.TooltipModel
 import com.fappslab.tourtip.theme.defaults.LocalBoundsRegistry
 
 /**
- * Anchors a bubble element to a position based on the bounds of the calling layout.
+ * Anchors a tooltip element to a position based on the bounds of the calling layout.
  *
- * This extension function allows a bubble to be positioned based on the layout coordinates
+ * This extension function allows a tooltip to be positioned based on the layout coordinates
  * of the element to which this modifier is applied. It uses a registry to keep track of the
- * bounds of the element, which can then be used to position the bubble accurately.
+ * bounds of the element, which can then be used to position the tooltip accurately.
  *
  * Usage:
- * To use this function, you need to provide a model function that returns a `BubbleDetail` object.
- * The `BubbleDetail` class should contain the necessary information about the bubble, including its index.
+ * To use this function, you need to provide a model function that returns a `TooltipModel` object.
+ * The `TooltipModel` class should contain the necessary information about the tooltip, including its index.
  *
  * Example:
  * ```
  * Text(
  *     modifier = Modifier
  *         .fillMaxWidth()
- *         .bubbleAnchor {
- *             BubbleDetail(
+ *         .tooltipAnchor {
+ *             TooltipModel(
  *                 index = 0,
  *                 title = { Text("Step 1") },
  *                 message = { Text("This is the first step of the tour.") },
@@ -42,11 +42,11 @@ import com.fappslab.tourtip.theme.defaults.LocalBoundsRegistry
  * )
  * ```
  *
- * @param model A lambda function that returns a `BubbleDetail` object. The `BubbleDetail` should
+ * @param model A lambda function that returns a `TooltipModel` object. The `TooltipModel` should
  * include an index which is used to remember the positioning lambda.
- * @return A modified `Modifier` with the bubble anchor behavior applied.
+ * @return A modified `Modifier` with the tooltip anchor behavior applied.
  */
-fun Modifier.bubbleAnchor(model: () -> BubbleDetail): Modifier = composed {
+fun Modifier.tooltipAnchor(model: () -> TooltipModel): Modifier = composed {
     val registry = LocalBoundsRegistry.current
     val boundsUpdated = remember(model().index) {
         { coordinates: LayoutCoordinates ->

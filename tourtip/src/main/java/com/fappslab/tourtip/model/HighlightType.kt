@@ -4,7 +4,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Path
 
 /**
- * A sealed class representing the different types of highlights for the Tourtip bubbles.
+ * A sealed class representing the different types of highlights that can be used in a guided tour.
  */
 sealed class HighlightType {
 

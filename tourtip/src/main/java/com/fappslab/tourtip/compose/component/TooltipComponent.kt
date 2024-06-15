@@ -21,14 +21,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.fappslab.tourtip.compose.extension.toDp
 import com.fappslab.tourtip.compose.extension.toPx
-import com.fappslab.tourtip.model.BubblePosition
 import com.fappslab.tourtip.model.ShapeType
 import com.fappslab.tourtip.model.StepModel
+import com.fappslab.tourtip.model.TooltipPosition
 import com.fappslab.tourtip.model.TourtipAnimType
 import com.fappslab.tourtip.theme.TourtipTheme
 
 @Composable
-internal fun BubbleComponent(
+internal fun TooltipComponent(
     targetBounds: Rect,
     title: @Composable (() -> Unit)?,
     message: @Composable () -> Unit,
@@ -96,12 +96,12 @@ internal fun BubbleComponent(
 }
 
 @Composable
-private fun calculateAlignment(targetBounds: Rect): BubblePosition {
+private fun calculateAlignment(targetBounds: Rect): TooltipPosition {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp.toPx()
     val isCaretUp = targetBounds.top <= screenHeight / 2
 
-    return BubblePosition(isCaretUp = isCaretUp)
+    return TooltipPosition(isCaretUp = isCaretUp)
 }
 
 @Composable

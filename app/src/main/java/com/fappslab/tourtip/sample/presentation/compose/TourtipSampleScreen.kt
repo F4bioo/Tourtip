@@ -26,17 +26,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fappslab.tourtip.compose.TourtipLayout
-import com.fappslab.tourtip.compose.extension.bubbleAnchor
+import com.fappslab.tourtip.compose.extension.tooltipAnchor
 import com.fappslab.tourtip.model.TourtipAnimType
 import com.fappslab.tourtip.sample.R
 import com.fappslab.tourtip.sample.presentation.compose.component.AnimationSelector
 import com.fappslab.tourtip.sample.presentation.compose.component.BottomMenu
 import com.fappslab.tourtip.sample.presentation.compose.component.IconLauncher
-import com.fappslab.tourtip.sample.presentation.compose.component.bubbleAppName
-import com.fappslab.tourtip.sample.presentation.compose.component.bubbleIconLauncher
-import com.fappslab.tourtip.sample.presentation.compose.component.bubbleRadioGroupAnim
-import com.fappslab.tourtip.sample.presentation.compose.component.bubbleStartTourtip
-import com.fappslab.tourtip.sample.presentation.compose.component.bubbleTitle
+import com.fappslab.tourtip.sample.presentation.compose.component.tooltipAppName
+import com.fappslab.tourtip.sample.presentation.compose.component.tooltipIconLauncher
+import com.fappslab.tourtip.sample.presentation.compose.component.tooltipRadioGroupAnim
+import com.fappslab.tourtip.sample.presentation.compose.component.tooltipStartTourtip
+import com.fappslab.tourtip.sample.presentation.compose.component.tooltipTitle
 
 @Composable
 fun TourtipSampleScreen() {
@@ -82,7 +82,7 @@ fun ColumnScope.TourtipSampleContent(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .bubbleAnchor { bubbleTitle() },
+                .tooltipAnchor { tooltipTitle() },
             text = "Let's start the Tourtip Sample!",
             style = MaterialTheme.typography.headlineLarge,
         )
@@ -95,21 +95,21 @@ fun ColumnScope.TourtipSampleContent(
             IconLauncher(
                 modifier = Modifier
                     .size(50.dp)
-                    .bubbleAnchor { bubbleIconLauncher(index = 1) },
+                    .tooltipAnchor { tooltipIconLauncher(index = 1) },
             )
             IconLauncher(
                 modifier = Modifier
                     .size(40.dp)
-                    .bubbleAnchor { bubbleIconLauncher(index = 2) },
+                    .tooltipAnchor { tooltipIconLauncher(index = 2) },
             )
             IconLauncher(
                 modifier = Modifier
                     .size(30.dp)
-                    .bubbleAnchor { bubbleIconLauncher(index = 3) },
+                    .tooltipAnchor { tooltipIconLauncher(index = 3) },
             )
             Text(
-                modifier = Modifier.bubbleAnchor {
-                    bubbleAppName()
+                modifier = Modifier.tooltipAnchor {
+                    tooltipAppName()
                 },
                 text = stringResource(id = R.string.app_name),
                 style = MaterialTheme.typography.titleMedium,
@@ -117,8 +117,8 @@ fun ColumnScope.TourtipSampleContent(
         }
         Spacer(Modifier.size(32.dp))
         Row(
-            modifier = Modifier.bubbleAnchor {
-                bubbleRadioGroupAnim()
+            modifier = Modifier.tooltipAnchor {
+                tooltipRadioGroupAnim()
             }
         ) {
 
@@ -131,7 +131,7 @@ fun ColumnScope.TourtipSampleContent(
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .bubbleAnchor { bubbleStartTourtip() }
+                .tooltipAnchor { tooltipStartTourtip() }
                 .size(52.dp),
             shape = RoundedCornerShape(8.dp),
             onClick = onStartClicked

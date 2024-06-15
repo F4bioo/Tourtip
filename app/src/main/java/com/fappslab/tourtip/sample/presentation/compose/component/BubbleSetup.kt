@@ -3,12 +3,12 @@ package com.fappslab.tourtip.sample.presentation.compose.component
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.ui.geometry.RoundRect
-import com.fappslab.tourtip.model.BubbleDetail
+import com.fappslab.tourtip.model.TooltipModel
 import com.fappslab.tourtip.model.HighlightType
 import com.fappslab.tourtip.sample.presentation.compose.component.extension.drawZigzagRect
 
-fun bubbleTitle(): BubbleDetail {
-    return BubbleDetail(
+fun tooltipTitle(): TooltipModel {
+    return TooltipModel(
         index = 0,
         title = {
             Text(text = "Custom Highlight Example")
@@ -22,8 +22,8 @@ fun bubbleTitle(): BubbleDetail {
     )
 }
 
-fun bubbleIconLauncher(index: Int): BubbleDetail {
-    return BubbleDetail(
+fun tooltipIconLauncher(index: Int): TooltipModel {
+    return TooltipModel(
         index = index,
         title = {
             Text(text = "Circle Highlight Example")
@@ -35,8 +35,8 @@ fun bubbleIconLauncher(index: Int): BubbleDetail {
     )
 }
 
-fun bubbleAppName(): BubbleDetail {
-    return BubbleDetail(
+fun tooltipAppName(): TooltipModel {
+    return TooltipModel(
         index = 4,
         title = {
             Text(text = "Rounded Highlight Example")
@@ -48,8 +48,8 @@ fun bubbleAppName(): BubbleDetail {
     )
 }
 
-fun bubbleRadioGroupAnim(): BubbleDetail {
-    return BubbleDetail(
+fun tooltipRadioGroupAnim(): TooltipModel {
+    return TooltipModel(
         index = 5,
         title = {
             Text(text = "Rounded Highlight Example")
@@ -61,8 +61,8 @@ fun bubbleRadioGroupAnim(): BubbleDetail {
     )
 }
 
-fun bubbleStartTourtip(): BubbleDetail {
-    return BubbleDetail(
+fun tooltipStartTourtip(): TooltipModel {
+    return TooltipModel(
         index = 6,
         title = {
             Text(text = "Rounded Highlight Example")
@@ -74,8 +74,8 @@ fun bubbleStartTourtip(): BubbleDetail {
     )
 }
 
-fun bubbleBottomCheck(): BubbleDetail {
-    return BubbleDetail(
+fun tooltipBottomCheck(): TooltipModel {
+    return TooltipModel(
         index = 7,
         title = {
             Text(text = "Circle Highlight Example")
@@ -87,8 +87,8 @@ fun bubbleBottomCheck(): BubbleDetail {
     )
 }
 
-fun bubbleBottomEdit(): BubbleDetail {
-    return BubbleDetail(
+fun tooltipBottomEdit(): TooltipModel {
+    return TooltipModel(
         index = 8,
         title = {
             Text(text = "Circle Highlight Example")
@@ -100,8 +100,8 @@ fun bubbleBottomEdit(): BubbleDetail {
     )
 }
 
-fun bubbleFabButton(): BubbleDetail {
-    return BubbleDetail(
+fun tooltipFabButton(): TooltipModel {
+    return TooltipModel(
         index = 9,
         title = {
             Text(text = "Custom Highlight Example")
