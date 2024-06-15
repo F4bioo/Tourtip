@@ -130,8 +130,50 @@ jobs:
           name: app-build
           path: build-artifacts
 
-  app-deploy:
+  sign-pgp:
     needs: app-build
+    name: Sign PGP
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download App Version Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: app-version
+          path: version-artifacts
+
+      - name: Download App Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: app-build
+          path: build-artifacts
+
+      - name: List Download App Version Artifacts
+        run: ls -l version-artifacts
+
+      - name: List Download App Build Artifacts
+        run: ls -l build-artifacts
+
+      - name: Import PGP Key
+        run: echo "${{ secrets.PGP_PRIVATE_KEY }}" | gpg --batch --import
+
+      - name: Sign AAR with PGP
+        run: echo "${{ secrets.PGP_PASSPHRASE }}" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --armor --detach-sign build-artifacts/tourtip-release.aar
+
+      - name: List Signed Artifacts
+        run: ls -l build-artifacts
+
+      - name: Upload Signed Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          retention-days: 1
+          name: sign-pgp
+          path: build-artifacts
+
+  app-deploy:
+    needs: sign-pgp
     name: App Deploy
     runs-on: ubuntu-latest
     steps:
@@ -146,10 +188,10 @@ jobs:
           name: app-version
           path: version-artifacts
 
-      - name: Download App Build Artifacts
+      - name: Download Release Artifacts
         uses: actions/download-artifact@v3
         with:
-          name: app-build
+          name: sign-pgp
           path: build-artifacts
 
       - name: List Download App Version Artifacts
@@ -212,3 +254,13 @@ jobs:
           asset_path: build-artifacts/tourtip-release.aar
           asset_name: tourtip-v${{ env.RELEASE_TAG }}.aar
           asset_content_type: application/java-archive
+
+      - name: Upload PGP Signature Release Asset for AAR
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build-artifacts/tourtip-release.aar.asc
+          asset_name: tourtip-v${{ env.RELEASE_TAG }}.aar.asc
+          asset_content_type: application/pgp-signature
