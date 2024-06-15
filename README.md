@@ -15,21 +15,21 @@ app.
 <!-- start dependency -->
 ## Installation
 
-### Groovy
+### Groovy 🚧 Not available yet, work in progress 🚧
 Add the following dependency to your `build.gradle` file on app module:
 
 ```gradle
 dependencies {
-    implementation 'com.fappslab.tourtip:tourtip:1.06.2'
+    implementation 'com.fappslab.tourtip:tourtip:1.06.3'
 }
 ```
 
-### Kotlin
+### Kotlin 🚧 Not available yet, work in progress 🚧
 Add the following dependency to your `build.gradle.kts` file on app module:
 
 ```kotlin
 dependencies {
-    implementation("com.fappslab.tourtip:tourtip:1.06.2")
+    implementation("com.fappslab.tourtip:tourtip:1.06.3")
 }
 ```
 <!-- end dependency -->
