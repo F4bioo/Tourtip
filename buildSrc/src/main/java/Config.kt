@@ -8,8 +8,7 @@ object Config {
     const val versionCode: Int = 0
     const val versionName: String = "1.06"
 
-    val artifactId: String
-        get() = packageName.substringAfterLast(delimiter = ".")
+    val artifactId: String = packageName.substringAfterLast(delimiter = ".")
+    const val version: String = "$versionName.$versionCode"
     const val groupId: String = packageName
-    const val version: String = versionName
 }
