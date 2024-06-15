@@ -101,7 +101,10 @@ jobs:
         run: ./gradlew assembleRelease
 
       - name: Build AAR
-        run: ./gradlew publishToMavenLocal
+        run: ./gradlew publishReleasePublicationToMavenLocal
+
+      - name: Publish to Maven Central
+        run: ./gradlew publishReleasePublicationToOSSRHRepository
 
       - name: Read Version Name File
         run: echo "VERSION_NAME=$(cat version-artifacts/version_name.txt)" >> $GITHUB_ENV
