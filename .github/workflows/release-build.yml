@@ -131,7 +131,7 @@ jobs:
           path: build-artifacts
 
   sign-pgp:
-    needs: app-build
+    needs: [ app-build, app-version ]
     name: Sign PGP
     runs-on: ubuntu-latest
     steps:
@@ -162,10 +162,10 @@ jobs:
       - name: Sign AAR with PGP
         run: echo "${{ secrets.PGP_PASSPHRASE }}" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --armor --detach-sign build-artifacts/tourtip-release.aar
 
-      - name: List Signed Artifacts
+      - name: List Upload PGP Sign Artifacts
         run: ls -l build-artifacts
 
-      - name: Upload Signed Artifacts
+      - name: Upload PGP Sign Artifacts
         uses: actions/upload-artifact@v3
         with:
           retention-days: 1
@@ -188,7 +188,7 @@ jobs:
           name: app-version
           path: version-artifacts
 
-      - name: Download Release Artifacts
+      - name: Download Sign PGP Artifacts
         uses: actions/download-artifact@v3
         with:
           name: sign-pgp

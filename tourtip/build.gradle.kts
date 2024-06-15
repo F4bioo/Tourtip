@@ -4,8 +4,11 @@ plugins {
     id("maven-publish")
     id("signing")
 }
-
 apply(from = "$rootDir/plugins/android-build.gradle")
+
+fun findPropertyByName(name: String): String {
+    return (project.findProperty(name) as? String).orEmpty()
+}
 
 android {
     namespace = Config.namespace
@@ -26,27 +29,27 @@ publishing {
             version = Config.version
 
             pom {
-                name.set("Tourtip")
-                description.set("A guided tour library for Android applications, built using Jetpack Compose.")
-                url.set("https://github.com/F4bioo/Tourtip")
+                name.set(findPropertyByName("POM_PROJECT_NAME"))
+                description.set(findPropertyByName("POM_PROJECT_DESCRIPTION"))
+                url.set(findPropertyByName("POM_PROJECT_URL"))
 
                 licenses {
                     license {
-                        name.set("The MIT License")
-                        url.set("https://mit-license.org/")
+                        name.set(findPropertyByName("POM_LICENSE_NAME"))
+                        url.set(findPropertyByName("POM_LICENSE_URL"))
                     }
                 }
                 developers {
                     developer {
-                        id.set("F4bioo")
-                        name.set("Fabio Marinho")
-                        email.set("costa.fbo@gmail.com")
+                        id.set(findPropertyByName("POM_DEVELOPER_ID"))
+                        name.set(findPropertyByName("POM_DEVELOPER_NAME"))
+                        email.set(findPropertyByName("POM_DEVELOPER_EMAIL"))
                     }
                 }
                 scm {
-                    connection.set("scm:git:github.com/F4bioo/Tourtip.git")
-                    developerConnection.set("scm:git:ssh://github.com/F4bioo/Tourtip.git")
-                    url.set("https://github.com/F4bioo/Tourtip")
+                    connection.set(findPropertyByName("POM_SCM_CONNECTION"))
+                    developerConnection.set(findPropertyByName("POM_SCM_DEVELOPER_CONNECTION"))
+                    url.set(findPropertyByName("POM_SCM_URL"))
                 }
             }
         }
@@ -54,17 +57,15 @@ publishing {
     repositories {
         maven {
             name = "OSSRH"
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            url = uri(findPropertyByName("OSSRH_URL"))
             credentials {
-                username = project.findProperty("ossrhUsername") as String?
-                    ?: System.getenv("OSSRH_USERNAME")
-                password = project.findProperty("ossrhPassword") as String?
-                    ?: System.getenv("OSSRH_PASSWORD")
+                username = System.getenv("OSSRH_USERNAME")
+                password = System.getenv("OSSRH_PASSWORD")
             }
         }
         maven {
-            name = "local"
-            url = uri(layout.buildDirectory.dir("repo"))
+            name = "TestRepo"
+            url = uri(layout.buildDirectory.dir("test-repo"))
         }
     }
 }
