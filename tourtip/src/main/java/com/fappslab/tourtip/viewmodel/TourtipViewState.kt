@@ -1,7 +1,7 @@
 package com.fappslab.tourtip.viewmodel
 
 import androidx.compose.ui.geometry.Rect
-import com.fappslab.tourtip.model.BubbleDetail
+import com.fappslab.tourtip.model.TooltipModel
 import com.fappslab.tourtip.model.HighlightType
 import com.fappslab.tourtip.model.OverlayModel
 import com.fappslab.tourtip.model.StepModel
@@ -12,7 +12,7 @@ internal data class TourtipViewState(
     val stepModel: StepModel? = null,
     val indexedBounds: Map<Int, Rect> = emptyMap(),
     val highlightTypes: Map<Int, HighlightType> = emptyMap(),
-    val bubbleDetails: Map<Int, BubbleDetail> = emptyMap(),
+    val tooltipModels: Map<Int, TooltipModel> = emptyMap(),
     val overlayModel: OverlayModel = OverlayModel()
 ) {
     private fun updateOverlayModelState(): TourtipViewState {
@@ -23,13 +23,13 @@ internal data class TourtipViewState(
         return copy(overlayModel = updatedOverlayModel)
     }
 
-    fun updateBoundsState(model: BubbleDetail, bounds: Rect): TourtipViewState {
+    fun updateBoundsState(model: TooltipModel, bounds: Rect): TourtipViewState {
         return copy(
             indexedBounds = indexedBounds.toMutableMap()
                 .apply { put(model.index, bounds) },
             highlightTypes = highlightTypes.toMutableMap()
                 .apply { put(model.index, model.highlightType) },
-            bubbleDetails = bubbleDetails.toMutableMap()
+            tooltipModels = tooltipModels.toMutableMap()
                 .apply { put(model.index, model) }
         ).updateOverlayModelState()
     }
@@ -39,7 +39,7 @@ internal data class TourtipViewState(
     }
 
     fun updateOnNextState(): TourtipViewState {
-        return if (currentStep < bubbleDetails.size.dec()) {
+        return if (currentStep < tooltipModels.size.dec()) {
             copy(currentStep = currentStep.inc()).updateOverlayModelState()
         } else copy(isVisible = false)
     }

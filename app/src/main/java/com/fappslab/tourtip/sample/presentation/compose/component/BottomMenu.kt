@@ -12,15 +12,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.fappslab.tourtip.compose.extension.bubbleAnchor
+import com.fappslab.tourtip.compose.extension.tooltipAnchor
 
 @Composable
 internal fun BottomMenu() {
     BottomAppBar(
         actions = {
             IconButton(
-                modifier = Modifier.bubbleAnchor {
-                    bubbleBottomCheck()
+                modifier = Modifier.tooltipAnchor {
+                    tooltipBottomCheck()
                 },
                 onClick = {}
             ) {
@@ -30,8 +30,8 @@ internal fun BottomMenu() {
                 )
             }
             IconButton(
-                modifier = Modifier.bubbleAnchor {
-                    bubbleBottomEdit()
+                modifier = Modifier.tooltipAnchor {
+                    tooltipBottomEdit()
                 },
                 onClick = {}
             ) {
@@ -43,8 +43,8 @@ internal fun BottomMenu() {
         },
         floatingActionButton = {
             FloatingActionButton(
-                modifier = Modifier.bubbleAnchor {
-                    bubbleFabButton()
+                modifier = Modifier.tooltipAnchor {
+                    tooltipFabButton()
                 },
                 elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
                 onClick = {},

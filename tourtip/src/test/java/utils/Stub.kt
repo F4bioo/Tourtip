@@ -1,9 +1,11 @@
+package utils
+
 import androidx.compose.ui.geometry.Rect
-import com.fappslab.tourtip.model.BubbleDetail
+import com.fappslab.tourtip.model.TooltipModel
 import com.fappslab.tourtip.model.HighlightType
 
-fun bubbleDetailStub(index: Int): BubbleDetail {
-    return BubbleDetail(
+fun tooltipModelStub(index: Int): TooltipModel {
+    return TooltipModel(
         index = index,
         title = null,
         message = {},
