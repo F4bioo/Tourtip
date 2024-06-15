@@ -37,20 +37,14 @@ jobs:
       - name: Read Config File
         id: version_details
         run: |
-          echo "VERSION_CODE=$(grep 'const val versionCode' buildSrc/src/main/java/Config.kt | awk -F '=' '{print $2}' | tr -d ' ')" >> $GITHUB_ENV
           echo "VERSION_NAME=$(grep 'const val versionName' buildSrc/src/main/java/Config.kt | awk -F '=' '{print $2}' | tr -d ' \"')" >> $GITHUB_ENV
+          echo "VERSION_CODE=$(grep 'const val versionCode' buildSrc/src/main/java/Config.kt | awk -F '=' '{print $2}' | tr -d ' ')" >> $GITHUB_ENV
 
       - name: Create Release Tag
         run: echo "RELEASE_TAG=${{ env.VERSION_NAME }}.${{ env.VERSION_CODE }}" >> $GITHUB_ENV
 
       - name: Create Version Artifacts Folder
         run: mkdir -p version-artifacts
-
-      - name: Create Version Code File
-        run: echo "${{ env.VERSION_CODE }}" > $GITHUB_WORKSPACE/version-artifacts/version_code.txt
-
-      - name: Create Version Name File
-        run: echo "${{ env.VERSION_NAME }}" > $GITHUB_WORKSPACE/version-artifacts/version_name.txt
 
       - name: Create Release Tag File
         run: echo "${{ env.RELEASE_TAG }}" > $GITHUB_WORKSPACE/version-artifacts/release_tag.txt
@@ -91,29 +85,10 @@ jobs:
       - name: Grant Gradlew Permission
         run: chmod +x gradlew
 
-      - name: Export Environment Variables
-        run: |
-          echo "OSSRH_USERNAME=${{ secrets.OSSRH_USERNAME }}" >> $GITHUB_ENV
-          echo "OSSRH_PASSWORD=${{ secrets.OSSRH_PASSWORD }}" >> $GITHUB_ENV
-          echo "PGP_PASSPHRASE=${{ secrets.PGP_PASSPHRASE }}" >> $GITHUB_ENV
-          echo "PGP_PRIVATE_KEY<<EOF" >> $GITHUB_ENV
-          echo "${{ secrets.PGP_PRIVATE_KEY }}" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-      - name: Download App Version Artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: app-version
-          path: version-artifacts
-
-      - name: Build APK
+      - name: Build APK Sample
         run: ./gradlew assembleRelease
 
-      - name: Import PGP Key
-        run: |
-          echo "${{ secrets.PGP_PRIVATE_KEY }}" | gpg --batch --import
-
-      - name: Build AAR
+      - name: Build AAR Library
         run: ./gradlew publishReleasePublicationToMavenLocal
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
@@ -121,7 +96,7 @@ jobs:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
 
-      - name: Publish to Maven Central
+      - name: Publish Library to Maven Central
         run: ./gradlew publishReleasePublicationToOSSRHRepository
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
@@ -129,10 +104,7 @@ jobs:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
 
-      - name: Read Version Name File
-        run: echo "VERSION_NAME=$(cat version-artifacts/version_name.txt)" >> $GITHUB_ENV
-
-      - name: Create App Build Artifacts Folder
+      - name: Create Build Artifacts Folder
         run: mkdir -p build-artifacts
 
       - name: Move Builds Files to build-artifacts
@@ -140,13 +112,10 @@ jobs:
           mv app/build/outputs/apk/release/app-release-unsigned.apk build-artifacts/app-release-unsigned.apk
           mv tourtip/build/outputs/aar/tourtip-release.aar build-artifacts/tourtip-release.aar
 
-      - name: Read Release Tag File
-        run: echo "RELEASE_TAG=$(cat version-artifacts/release_tag.txt)" >> $GITHUB_ENV
-
-      - name: List Upload App Build Artifacts
+      - name: List Upload Build Artifacts
         run: ls -l build-artifacts
 
-      - name: Upload App Build Artifacts
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
           retention-days: 1
@@ -161,22 +130,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download App Version Artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: app-version
-          path: version-artifacts
-
-      - name: Download App Build Artifacts
+      - name: Download Build Artifacts
         uses: actions/download-artifact@v3
         with:
           name: app-build
           path: build-artifacts
 
-      - name: List Download App Version Artifacts
+      - name: List Download Version Artifacts
         run: ls -l version-artifacts
 
-      - name: List Download App Build Artifacts
+      - name: List Download Build Artifacts
         run: ls -l build-artifacts
 
       - name: Import PGP Key
@@ -185,10 +148,10 @@ jobs:
       - name: Sign AAR with PGP
         run: echo "${{ secrets.PGP_PASSPHRASE }}" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --armor --detach-sign build-artifacts/tourtip-release.aar
 
-      - name: List Upload PGP Sign Artifacts
+      - name: List PGP Sign Build Artifacts
         run: ls -l build-artifacts
 
-      - name: Upload PGP Sign Artifacts
+      - name: Upload PGP Sign Build Artifacts
         uses: actions/upload-artifact@v3
         with:
           retention-days: 1
@@ -205,29 +168,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Download App Version Artifacts
+      - name: Download Version Artifacts
         uses: actions/download-artifact@v3
         with:
           name: app-version
           path: version-artifacts
 
-      - name: Download Sign PGP Artifacts
+      - name: Download Build Artifacts
         uses: actions/download-artifact@v3
         with:
           name: sign-pgp
           path: build-artifacts
 
-      - name: List Download App Version Artifacts
+      - name: List Download Version Artifacts
         run: ls -l version-artifacts
 
-      - name: List Download App Build Artifact
+      - name: List Download Build Artifacts
         run: ls -l build-artifacts
-
-      - name: Read Version Code File
-        run: echo "VERSION_CODE=$(cat version-artifacts/version_code.txt)" >> $GITHUB_ENV
-
-      - name: Read Version Name File
-        run: echo "VERSION_NAME=$(cat version-artifacts/version_name.txt)" >> $GITHUB_ENV
 
       - name: Read Release Tag File
         run: echo "RELEASE_TAG=$(cat version-artifacts/release_tag.txt)" >> $GITHUB_ENV
