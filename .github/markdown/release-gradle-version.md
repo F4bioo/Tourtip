@@ -1,6 +1,6 @@
 ## Installation
 
-### Groovy
+### Groovy 🚧 Not available yet, work in progress 🚧
 Add the following dependency to your `build.gradle` file on app module:
 
 ```gradle
@@ -9,7 +9,7 @@ dependencies {
 }
 ```
 
-### Kotlin
+### Kotlin 🚧 Not available yet, work in progress 🚧
 Add the following dependency to your `build.gradle.kts` file on app module:
 
 ```kotlin
