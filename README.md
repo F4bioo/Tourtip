@@ -154,4 +154,4 @@ We welcome contributions! If you'd like to contribute to Tourtip, please follow 
 6. Create a new Pull Request to the `develop` branch.
 
 ## License
-Tourtip is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+Tourtip is licensed under the Apache 2.0 License. See the [LICENSE](LICENSE) file for more information.
