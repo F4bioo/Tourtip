@@ -109,11 +109,25 @@ jobs:
       - name: Build APK
         run: ./gradlew assembleRelease
 
+      - name: Import PGP Key
+        run: |
+          echo "${{ secrets.PGP_PRIVATE_KEY }}" | gpg --batch --import
+
       - name: Build AAR
         run: ./gradlew publishReleasePublicationToMavenLocal
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+          PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
 
       - name: Publish to Maven Central
         run: ./gradlew publishReleasePublicationToOSSRHRepository
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+          PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
 
       - name: Read Version Name File
         run: echo "VERSION_NAME=$(cat version-artifacts/version_name.txt)" >> $GITHUB_ENV
