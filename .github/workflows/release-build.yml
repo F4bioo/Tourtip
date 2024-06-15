@@ -93,10 +93,10 @@ jobs:
 
       - name: Export Environment Variables
         run: |
-          echo "OSSRH_USERNAME=${{ secrets.OSSRH_USERNAME }}" >> $GITHUB_ENV
-          echo "OSSRH_PASSWORD=${{ secrets.OSSRH_PASSWORD }}" >> $GITHUB_ENV
-          echo "PGP_PRIVATE_KEY=${{ secrets.PGP_PRIVATE_KEY }}" >> $GITHUB_ENV
-          echo "PGP_PASSPHRASE=${{ secrets.PGP_PASSPHRASE }}" >> $GITHUB_ENV
+          printf "OSSRH_USERNAME=\"%s\"\n" "${{ secrets.OSSRH_USERNAME }}" >> $GITHUB_ENV
+          printf "OSSRH_PASSWORD=\"%s\"\n" "${{ secrets.OSSRH_PASSWORD }}" >> $GITHUB_ENV
+          printf "PGP_PRIVATE_KEY=\"%s\"\n" "${{ secrets.PGP_PRIVATE_KEY }}" >> $GITHUB_ENV
+          printf "PGP_PASSPHRASE=\"%s\"\n" "${{ secrets.PGP_PASSPHRASE }}" >> $GITHUB_ENV      
 
       - name: Download App Version Artifacts
         uses: actions/download-artifact@v3
