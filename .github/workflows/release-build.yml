@@ -96,8 +96,9 @@ jobs:
           echo "OSSRH_USERNAME=${{ secrets.OSSRH_USERNAME }}" >> $GITHUB_ENV
           echo "OSSRH_PASSWORD=${{ secrets.OSSRH_PASSWORD }}" >> $GITHUB_ENV
           echo "PGP_PASSPHRASE=${{ secrets.PGP_PASSPHRASE }}" >> $GITHUB_ENV
-          echo "${{ secrets.PGP_PRIVATE_KEY }}" | base64 --decode > private_key.asc
-          echo "PGP_PRIVATE_KEY=$(cat private_key.asc)" >> $GITHUB_ENV
+          echo "PGP_PRIVATE_KEY<<EOF" >> $GITHUB_ENV
+          echo "${{ secrets.PGP_PRIVATE_KEY }}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Download App Version Artifacts
         uses: actions/download-artifact@v3
