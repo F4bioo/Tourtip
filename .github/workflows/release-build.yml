@@ -91,6 +91,13 @@ jobs:
       - name: Grant Gradlew Permission
         run: chmod +x gradlew
 
+      - name: Export Environment Variables
+        run: |
+          echo "OSSRH_USERNAME=${{ secrets.OSSRH_USERNAME }}" >> $GITHUB_ENV
+          echo "OSSRH_PASSWORD=${{ secrets.OSSRH_PASSWORD }}" >> $GITHUB_ENV
+          echo "PGP_PRIVATE_KEY=${{ secrets.PGP_PRIVATE_KEY }}" >> $GITHUB_ENV
+          echo "PGP_PASSPHRASE=${{ secrets.PGP_PASSPHRASE }}" >> $GITHUB_ENV
+
       - name: Download App Version Artifacts
         uses: actions/download-artifact@v3
         with:
