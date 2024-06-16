@@ -4,8 +4,8 @@ import re
 from datetime import datetime
 
 FIRST_RELEASE_YEAR = 2024
-VERSION_CODE = "const val VERSION_CODE"
-VERSION_NAME = "const val VERSION_NAME"
+VERSION_CODE = "const val versionCode"
+VERSION_NAME = "const val versionName"
 file_path = "buildSrc/src/main/java/Config.kt"
 
 # Read the configuration file
@@ -24,7 +24,7 @@ current_year = int(datetime.now().strftime("%Y"))
 year_difference = current_year - FIRST_RELEASE_YEAR
 
 # Extract the current versionCode and increment it
-version_code_pattern = re.compile(r'const val VERSION_CODE: Int = (\d+)')
+version_code_pattern = re.compile(r'const val versionCode: Int = (\d+)')
 version_code_match = version_code_pattern.search(''.join(lines))
 if version_code_match:
     current_version_code = int(version_code_match.group(1))
@@ -41,9 +41,9 @@ new_prefix = str(year_difference + 1)
 updated_lines = []
 for line in lines:
     if VERSION_CODE in line:
-        updated_lines.append(f"    {VERSION_CODE}: Int = {new_version_code} // Do not bump manually, it's managed by CI")
+        updated_lines.append(f"    {VERSION_CODE}: Int = {new_version_code}")
     elif VERSION_NAME in line:
-        updated_lines.append(f"    {VERSION_NAME}: String = \"{new_prefix}.{current_month}\" // Do not bump manually, it's managed by CI")
+        updated_lines.append(f"    {VERSION_NAME}: String = \"{new_prefix}.{current_month}\"")
     else:
         updated_lines.append(line.rstrip('\n'))
 
