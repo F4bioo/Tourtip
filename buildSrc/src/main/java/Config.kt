@@ -6,8 +6,10 @@ object Config {
     const val APPLICATION_ID: String = PACKAGE_NAME
     const val MIN_SDK: Int = 21
     const val TARGET_SDK: Int = 34
-    const val VERSION_CODE: Int = 1 // Do not bump manually, it's managed by CI
-    const val VERSION_NAME: String = "1.06" // Do not bump manually, it's managed by CI
+    // Do not bump manually, it's managed by CI
+    const val VERSION_CODE: Int = 1
+    // Do not bump manually, it's managed by CI
+    const val VERSION_NAME: String = "1.06"
 
     // Library configuration
     val ARTEFACT_ID: String = PACKAGE_NAME.substringAfterLast(delimiter = ".")
