@@ -15,14 +15,14 @@ app.
 <!-- start dependency -->
 ## Installation
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.fappslab.tourtip/tourtip)](https://central.sonatype.com/artifact/com.fappslab.tourtip/tourtip/1.06.2)
+[![Maven Central](https://img.shields.io/maven-central/v/com.fappslab.tourtip/tourtip)](https://central.sonatype.com/artifact/com.fappslab.tourtip/tourtip/1.06.1)
 
 ### Groovy 🚧 Not available yet, work in progress 🚧
 Add the following dependency to your `build.gradle` file on app module:
 
 ```gradle
 dependencies {
-    implementation 'com.fappslab.tourtip:tourtip:1.06.2'
+    implementation 'com.fappslab.tourtip:tourtip:1.06.1'
 }
 ```
 
@@ -31,7 +31,7 @@ Add the following dependency to your `build.gradle.kts` file on app module:
 
 ```kotlin
 dependencies {
-    implementation("com.fappslab.tourtip:tourtip:1.06.2")
+    implementation("com.fappslab.tourtip:tourtip:1.06.1")
 }
 ```
 <!-- end dependency -->
