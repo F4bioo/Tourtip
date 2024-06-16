@@ -7,12 +7,12 @@ object Config {
     const val MIN_SDK: Int = 21
     const val TARGET_SDK: Int = 34
     // Do not bump manually, it's managed by CI
-    const val VERSION_CODE: Int = 1
+    const val versionCode: Int = 0
     // Do not bump manually, it's managed by CI
-    const val VERSION_NAME: String = "1.06"
+    const val versionName: String = "1.06"
 
     // Library configuration
     val ARTEFACT_ID: String = PACKAGE_NAME.substringAfterLast(delimiter = ".")
-    const val VERSION: String = "$VERSION_NAME.$VERSION_CODE-SNAPSHOT"
+    const val VERSION: String = "$versionName.$versionCode-SNAPSHOT"
     const val GROUP_ID: String = PACKAGE_NAME
 }

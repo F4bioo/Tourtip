@@ -9,8 +9,8 @@ android {
 
     defaultConfig {
         applicationId = "${Config.APPLICATION_ID}.sample"
-        versionCode = Config.VERSION_CODE
-        versionName = Config.VERSION_NAME
+        versionCode = Config.versionCode
+        versionName = Config.versionName
 
         vectorDrawables {
             useSupportLibrary = true
