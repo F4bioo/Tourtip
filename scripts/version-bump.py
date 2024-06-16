@@ -4,8 +4,8 @@ import re
 from datetime import datetime
 
 FIRST_RELEASE_YEAR = 2024
-VERSION_CODE = "const val versionCode"
-VERSION_NAME = "const val versionName"
+VERSION_CODE = "const val VERSION_CODE"
+VERSION_NAME = "const val VERSION_NAME"
 file_path = "buildSrc/src/main/java/Config.kt"
 
 # Read the configuration file
@@ -24,7 +24,7 @@ current_year = int(datetime.now().strftime("%Y"))
 year_difference = current_year - FIRST_RELEASE_YEAR
 
 # Extract the current versionCode and increment it
-version_code_pattern = re.compile(r'const val versionCode: Int = (\d+)')
+version_code_pattern = re.compile(r'const val VERSION_CODE: Int = (\d+)')
 version_code_match = version_code_pattern.search(''.join(lines))
 if version_code_match:
     current_version_code = int(version_code_match.group(1))
