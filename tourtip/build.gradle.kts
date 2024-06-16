@@ -49,10 +49,10 @@ publishing {
                 }
                 issueManagement {
                     system.set("GitHub")
-                    url.set(findPropertyByName("POM_PROJECT_URL") + "/issues")
+                    url.set(findPropertyByName("POM_PROJECT_URL") + "issues")
                 }
                 scm {
-                    url.set(findPropertyByName("POM_PROJECT_URL" + "/tree/master"))
+                    url.set(findPropertyByName("POM_PROJECT_URL" + "tree/master"))
                     connection.set(findPropertyByName("POM_SCM_CONNECTION"))
                     developerConnection.set(findPropertyByName("POM_SCM_DEVELOPER_CONNECTION"))
                 }
