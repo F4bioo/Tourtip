@@ -36,11 +36,11 @@ dependencies {
     // Libs
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation("androidx.compose.ui:ui:1.6.8")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.6.8")
+    implementation(libs.androidx.material3)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.material3)
+    implementation("androidx.compose.ui:ui:1.6.8")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.6.8")
 
     // Tests
     testImplementation(libs.junit)
