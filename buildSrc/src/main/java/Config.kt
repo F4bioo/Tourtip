@@ -1,14 +1,16 @@
 object Config {
-    private const val packageName: String = "com.fappslab.tourtip"
-    const val namespace: String = packageName
-    const val compileSdk: Int = 34
-    const val applicationId: String = packageName
-    const val minSdk: Int = 21
-    const val targetSdk: Int = 34
-    const val versionCode: Int = 0
-    const val versionName: String = "1.06"
+    // App configuration
+    private const val PACKAGE_NAME: String = "com.fappslab.tourtip"
+    const val NAMESPACE: String = PACKAGE_NAME
+    const val COMPILE_SDK: Int = 34
+    const val APPLICATION_ID: String = PACKAGE_NAME
+    const val MIN_SDK: Int = 21
+    const val TARGET_SDK: Int = 34
+    const val VERSION_CODE: Int = 0
+    const val VERSION_NAME: String = "1.06"
 
-    val artifactId: String = packageName.substringAfterLast(delimiter = ".")
-    const val version: String = "$versionName.$versionCode"
-    const val groupId: String = packageName
+    // Library configuration
+    val ARTEFACT_ID: String = PACKAGE_NAME.substringAfterLast(delimiter = ".")
+    const val VERSION: String = "$VERSION_NAME.$VERSION_CODE-SNAPSHOT"
+    const val GROUP_ID: String = PACKAGE_NAME
 }

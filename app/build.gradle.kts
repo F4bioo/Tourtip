@@ -5,12 +5,12 @@ plugins {
 apply(from = "$rootDir/plugins/android-build.gradle")
 
 android {
-    namespace = "${Config.namespace}.sample"
+    namespace = "${Config.NAMESPACE}.sample"
 
     defaultConfig {
-        applicationId = "${Config.applicationId}.sample"
-        versionCode = Config.versionCode
-        versionName = Config.versionName
+        applicationId = "${Config.APPLICATION_ID}.sample"
+        versionCode = Config.VERSION_CODE
+        versionName = Config.VERSION_NAME
 
         vectorDrawables {
             useSupportLibrary = true
