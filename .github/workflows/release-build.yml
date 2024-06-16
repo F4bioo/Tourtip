@@ -28,7 +28,7 @@ jobs:
   lib-version:
     needs: [check-actor, check_job_flag]
     if: ${{ vars.SHOULD_CREATE_RELEASE == 'true' }}
-    name: App Version
+    name: LIB Version
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -196,6 +196,24 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      - name: Grant Gradlew Permission
+        run: chmod +x gradlew
 
       - name: Download LIB Version Artifacts
         uses: actions/download-artifact@v3
