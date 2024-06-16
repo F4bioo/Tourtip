@@ -11,7 +11,7 @@ fun findPropertyByName(name: String): String {
 }
 
 android {
-    namespace = Config.namespace
+    namespace = Config.NAMESPACE
 
     defaultConfig {
         consumerProguardFiles("consumer-rules.pro")
@@ -24,9 +24,9 @@ publishing {
             afterEvaluate {
                 from(components["release"])
             }
-            artifactId = Config.artifactId
-            groupId = Config.groupId
-            version = Config.version
+            artifactId = Config.ARTEFACT_ID
+            groupId = Config.GROUP_ID
+            version = Config.VERSION
 
             pom {
                 name.set(findPropertyByName("POM_PROJECT_NAME"))
@@ -46,6 +46,10 @@ publishing {
                         email.set(findPropertyByName("POM_DEVELOPER_EMAIL"))
                     }
                 }
+                issueManagement {
+                    system.set("GitHub")
+                    url.set(findPropertyByName("POM_PROJECT_URL") + "/issues")
+                }
                 scm {
                     connection.set(findPropertyByName("POM_SCM_CONNECTION"))
                     developerConnection.set(findPropertyByName("POM_SCM_DEVELOPER_CONNECTION"))
@@ -63,8 +67,23 @@ publishing {
                 password = System.getenv("OSSRH_PASSWORD")
             }
         }
+    }
+    repositories {
         maven {
-            name = "TestRepo"
+            name = "sonatype"
+
+            val url = if (Config.VERSION.endsWith("SNAPSHOT")) {
+                findPropertyByName("OSSRH_SNAPSHOT_URL")
+            } else findPropertyByName("OSSRH_RELEASE_URL")
+            setUrl(url)
+
+            credentials {
+                username = System.getenv("OSSRH_USERNAME")
+                password = System.getenv("OSSRH_PASSWORD")
+            }
+        }
+        maven {
+            name = "local"
             url = uri(layout.buildDirectory.dir("test-repo"))
         }
     }

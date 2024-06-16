@@ -41,9 +41,9 @@ new_prefix = str(year_difference + 1)
 updated_lines = []
 for line in lines:
     if VERSION_CODE in line:
-        updated_lines.append(f"    {VERSION_CODE}: Int = {new_version_code}")
+        updated_lines.append(f"    {VERSION_CODE}: Int = {new_version_code} // Do not bump manually, it's managed by CI")
     elif VERSION_NAME in line:
-        updated_lines.append(f"    {VERSION_NAME}: String = \"{new_prefix}.{current_month}\"")
+        updated_lines.append(f"    {VERSION_NAME}: String = \"{new_prefix}.{current_month}\" // Do not bump manually, it's managed by CI")
     else:
         updated_lines.append(line.rstrip('\n'))
 
