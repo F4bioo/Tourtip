@@ -15,6 +15,8 @@ app.
 <!-- start dependency -->
 ## Installation
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.fappslab.tourtip/tourtip)](https://central.sonatype.com/artifact/com.fappslab.tourtip/tourtip/.)
+
 ### Groovy 🚧 Not available yet, work in progress 🚧
 Add the following dependency to your `build.gradle` file on app module:
 
