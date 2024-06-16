@@ -52,24 +52,9 @@ publishing {
                     url.set(findPropertyByName("POM_PROJECT_URL") + "issues")
                 }
                 scm {
-                    url.set(findPropertyByName("POM_PROJECT_URL" + "tree/master"))
+                    url.set(findPropertyByName("POM_PROJECT_URL") + "tree/master")
                     connection.set(findPropertyByName("POM_SCM_CONNECTION"))
                     developerConnection.set(findPropertyByName("POM_SCM_DEVELOPER_CONNECTION"))
-                }
-
-                // A slightly hacky fix so that your POM will include any transitive dependencies
-                // that your library builds upon
-                withXml {
-                    val dependenciesNode = asNode().appendNode("dependencies")
-                    project.configurations.implementation.configure {
-                        dependencies.forEach { dependency ->
-                            val dependencyNode = dependenciesNode.appendNode("dependency")
-                            dependencyNode.appendNode("groupId", dependency.group)
-                            dependencyNode.appendNode("artifactId", dependency.name)
-                            dependencyNode.appendNode("version", dependency.version)
-                        }
-                    }
-
                 }
             }
         }
