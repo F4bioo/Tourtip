@@ -11,6 +11,7 @@ composeBom = "2024.06.00"
 appcompat = "1.7.0"
 material = "1.12.0"
 material3 = "1.3.0-beta03"
+mavenPublish = "0.28.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,3 +36,4 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
+vanniktechMavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "mavenPublish" }

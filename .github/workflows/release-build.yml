@@ -90,19 +90,6 @@ jobs:
 
       - name: Build AAR Library
         run: ./gradlew publishReleasePublicationToMavenLocal
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
-          PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
-
-      - name: Publish Library to Maven Central
-        run: ./gradlew publishReleasePublicationToOSSRHRepository
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
-          PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
 
       - name: Create Build Artifacts Folder
         run: mkdir -p build-artifacts
@@ -244,3 +231,11 @@ jobs:
           asset_path: build-artifacts/tourtip-release.aar.asc
           asset_name: tourtip-v${{ env.RELEASE_TAG }}.aar.asc
           asset_content_type: application/pgp-signature
+
+      - name: Publish Library to Maven Central
+        run: ./gradlew publishReleasePublicationToSonatypeRepository
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
