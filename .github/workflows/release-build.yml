@@ -286,7 +286,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: lib-build-artifacts/lib-build-artifacts.zip
-          asset_name: tourtip-v${{ env.RELEASE_TAG }}.zip
+          asset_name: tourtip-library-v${{ env.RELEASE_TAG }}-artifacts.zip
           asset_content_type: application/zip
 
       - name: Delete Release Artifacts
