@@ -7,7 +7,7 @@ object Config {
     const val MIN_SDK: Int = 21
     const val TARGET_SDK: Int = 34
     // Do not bump manually, it's managed by CI
-    const val versionCode: Int = 0
+    const val versionCode: Int = 1
     // Do not bump manually, it's managed by CI
     const val versionName: String = "1.06"
 
