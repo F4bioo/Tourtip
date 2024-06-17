@@ -175,6 +175,9 @@ jobs:
           mv lib-build-artifacts.zip ../lib-build-artifacts
         shell: bash
 
+      - name: List LIB Build Artifacts Folder
+        run: ls -l lib-build-artifacts
+
       - name: Upload LIB Build Artifacts
         uses: actions/upload-artifact@v3
         with:
