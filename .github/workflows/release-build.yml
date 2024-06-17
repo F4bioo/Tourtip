@@ -165,6 +165,12 @@ jobs:
       - name: List Upload LIB Build Artifacts
         run: ls -l lib-build-artifacts
 
+      - name: Compress LIB Build Artifacts
+        run: |
+          cd lib-build-artifacts
+          zip -r ../lib-build-artifacts.zip .
+        shell: bash
+
       - name: Upload LIB Build Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -272,8 +278,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: lib-build-artifacts/
-          asset_name: tourtip-v${{ env.RELEASE_TAG }}
+          asset_path: lib-build-artifacts/lib-build-artifacts.zip
+          asset_name: tourtip-v${{ env.RELEASE_TAG }}.zip
           asset_content_type: application/zip
 
       - name: Delete Release Artifacts
