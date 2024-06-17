@@ -156,19 +156,23 @@ jobs:
           PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
 
+      - name: Create LIB Build Artifacts Temp Folder
+        run: mkdir -p lib-build-temp
+
+      - name: Move LIB Build Files to lib-build-temp
+        run: cp ~/.m2/repository/com/fappslab/tourtip/tourtip/${{ env.RELEASE_TAG }}/* lib-build-temp/
+
+      - name: List LIB Build Artifacts Temp Folder
+        run: ls -l lib-build-temp
+
       - name: Create LIB Build Artifacts Folder
         run: mkdir -p lib-build-artifacts
 
-      - name: Move LIB Build Files to lib-build-artifacts
-        run: cp ~/.m2/repository/com/fappslab/tourtip/tourtip/${{ env.RELEASE_TAG }}/* lib-build-artifacts/
-
-      - name: List Upload LIB Build Artifacts
-        run: ls -l lib-build-artifacts
-
       - name: Compress LIB Build Artifacts
         run: |
-          cd lib-build-artifacts
-          zip -r ../lib-build-artifacts.zip .
+          cd lib-build-temp
+          zip -r lib-build-artifacts.zip .
+          mv lib-build-artifacts.zip ../lib-build-artifacts
         shell: bash
 
       - name: Upload LIB Build Artifacts
