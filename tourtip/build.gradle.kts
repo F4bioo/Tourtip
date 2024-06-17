@@ -1,7 +1,10 @@
+import com.vanniktech.maven.publish.SonatypeHost
+import org.gradle.configurationcache.extensions.capitalized
+
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("maven-publish")
+    alias(libs.plugins.vanniktechMavenPublish)
     id("signing")
 }
 apply(from = "$rootDir/plugins/android-build.gradle")
@@ -18,74 +21,53 @@ android {
     }
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("release") {
-            afterEvaluate {
-                from(components["release"])
-            }
-            artifactId = Config.ARTEFACT_ID
-            groupId = Config.GROUP_ID
-            version = Config.VERSION
+mavenPublishing {
+    coordinates(
+        artifactId = findPropertyByName("POM_ARTEFACT_ID"),
+        groupId = findPropertyByName("POM_GROUP_ID"),
+        version = Config.VERSION
+    )
 
-            pom {
-                name.set(findPropertyByName("POM_PROJECT_NAME"))
-                description.set(findPropertyByName("POM_PROJECT_DESCRIPTION"))
-                inceptionYear.set(findPropertyByName("POM_PROJECT_INCEPTION_YEAR"))
-                url.set(findPropertyByName("POM_PROJECT_URL"))
-                licenses {
-                    license {
-                        name.set(findPropertyByName("POM_LICENSE_NAME"))
-                        url.set(findPropertyByName("POM_LICENSE_URL"))
-                        distribution.set(findPropertyByName("POM_LICENSE_URL"))
-                    }
-                }
-                developers {
-                    developer {
-                        id.set(findPropertyByName("POM_DEVELOPER_ID"))
-                        name.set(findPropertyByName("POM_DEVELOPER_NAME"))
-                        email.set(findPropertyByName("POM_DEVELOPER_EMAIL"))
-                    }
-                }
-                issueManagement {
-                    system.set("GitHub")
-                    url.set(findPropertyByName("POM_PROJECT_URL") + "issues")
-                }
-                scm {
-                    url.set(findPropertyByName("POM_PROJECT_URL") + "tree/master")
-                    connection.set(findPropertyByName("POM_SCM_CONNECTION"))
-                    developerConnection.set(findPropertyByName("POM_SCM_DEVELOPER_CONNECTION"))
-                }
+    pom {
+        name.set(findPropertyByName("POM_ARTEFACT_ID").capitalized())
+        description.set(findPropertyByName("POM_PROJECT_DESCRIPTION"))
+        inceptionYear.set(findPropertyByName("POM_PROJECT_INCEPTION_YEAR"))
+        url.set(findPropertyByName("POM_PROJECT_URL"))
+        licenses {
+            license {
+                name.set(findPropertyByName("POM_LICENSE_NAME"))
+                url.set(findPropertyByName("POM_LICENSE_URL"))
+                distribution.set(findPropertyByName("POM_LICENSE_URL"))
             }
+        }
+        developers {
+            developer {
+                id.set(findPropertyByName("POM_DEVELOPER_ID"))
+                name.set(findPropertyByName("POM_DEVELOPER_NAME"))
+                email.set(findPropertyByName("POM_DEVELOPER_EMAIL"))
+            }
+        }
+        issueManagement {
+            system.set("GitHub")
+            url.set(findPropertyByName("POM_PROJECT_URL") + "issues")
+        }
+        scm {
+            url.set(findPropertyByName("POM_PROJECT_URL") + "tree/master")
+            connection.set(findPropertyByName("POM_SCM_CONNECTION"))
+            developerConnection.set(findPropertyByName("POM_SCM_DEVELOPER_CONNECTION"))
         }
     }
-    repositories {
-        maven {
-            name = "sonatype"
 
-            val url = if (Config.VERSION.endsWith("SNAPSHOT")) {
-                findPropertyByName("OSSRH_SNAPSHOT_URL")
-            } else findPropertyByName("OSSRH_RELEASE_URL")
-            setUrl(url)
-
-            credentials {
-                username = System.getenv("OSSRH_USERNAME")
-                password = System.getenv("OSSRH_PASSWORD")
-            }
-        }
-        maven {
-            name = "local"
-            url = uri(layout.buildDirectory.dir("test-repo"))
-        }
-    }
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = false)
+    signAllPublications()
 }
 
 signing {
     useInMemoryPgpKeys(
+        System.getenv("PGP_KEY_ID"),
         System.getenv("PGP_PRIVATE_KEY"),
         System.getenv("PGP_PASSPHRASE")
     )
-    sign(publishing.publications["release"])
 }
 
 val resolvedImplementation: Configuration by configurations.creating {
