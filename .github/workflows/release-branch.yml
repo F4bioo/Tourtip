@@ -72,7 +72,7 @@ jobs:
 
       - name: Commit and Push README File to develop
         run: |
-          sed -i '/<!-- start dependency -->/,/<!-- end dependency -->/!b;//!d;/<!-- start dependency -->/r .github/markdown/release-gradle-version.md' README.md
+          sed -i '/<!-- start dependency -->/,/<!-- end dependency -->/!b;//!d;/<!-- start dependency -->/r .github/markdown/release-branch-lib-version.md' README.md
           sed -i '/<!-- start dependency -->/,/<!-- end dependency -->/s|\$VERSION_NAME|${{ env.VERSION_NAME }}.${{ env.VERSION_CODE }}|g' README.md
           git add README.md
           if git diff-index --quiet HEAD --; then
