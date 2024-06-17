@@ -3,6 +3,18 @@ package com.fappslab.tourtip.sample.presentation.compose.component.extension
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Path
 
+/**
+ * This file contains examples of how to create custom highlight types for the Tourtip library.
+ *
+ * The `drawZigzagRect` and `drawWavyRect` functions are used to create custom shapes for the highlight.
+ * These functions are used in the `TooltipSetup.kt` file to create custom highlight types for the tooltips.
+ *
+ * `drawZigzagRect` creates a zigzag rectangle shape, and `drawWavyRect` creates a wavy rectangle shape.
+ * These shapes are then used as the highlight for the tooltips in the `TooltipSetup.kt` file.
+ *
+ * You can use these functions as a starting point to create your own custom highlight types.
+ */
+
 fun Path.drawZigzagRect(bounds: Rect, zigzagSize: Float = 10f) {
     val zigzagPath = Path()
     val stepsX = (bounds.width / zigzagSize).toInt()
@@ -64,7 +76,7 @@ fun Path.drawWavyRect(bounds: Rect, waveLength: Float = 20f, waveHeight: Float =
             wavyPath.lineTo(startX, startY)
         }
         if (endX <= bounds.right) {
-            wavyPath.quadraticTo(midX, midY, endX, startY)
+            quadraticTo(wavyPath, startX, startY, midX, midY, endX, startY)
         }
     }
 
@@ -78,7 +90,7 @@ fun Path.drawWavyRect(bounds: Rect, waveLength: Float = 20f, waveHeight: Float =
 
         wavyPath.lineTo(startX, startY)
         if (endY <= bounds.bottom) {
-            wavyPath.quadraticTo(midX, midY, startX, endY)
+            quadraticTo(wavyPath, startX, startY, midX, midY, startX, endY)
         }
     }
 
@@ -92,7 +104,7 @@ fun Path.drawWavyRect(bounds: Rect, waveLength: Float = 20f, waveHeight: Float =
 
         wavyPath.lineTo(startX, startY)
         if (endX >= bounds.left) {
-            wavyPath.quadraticTo(midX, midY, endX, startY)
+            quadraticTo(wavyPath, startX, startY, midX, midY, endX, startY)
         }
     }
 
@@ -106,10 +118,29 @@ fun Path.drawWavyRect(bounds: Rect, waveLength: Float = 20f, waveHeight: Float =
 
         wavyPath.lineTo(startX, startY)
         if (endY >= bounds.top) {
-            wavyPath.quadraticTo(midX, midY, startX, endY)
+            quadraticTo(wavyPath, startX, startY, midX, midY, startX, endY)
         }
     }
 
     wavyPath.close()
     this.addPath(wavyPath)
+}
+
+private fun quadraticTo(
+    path: Path,
+    startX: Float,
+    startY: Float,
+    midX: Float,
+    midY: Float,
+    endX: Float,
+    endY: Float
+) {
+    path.cubicTo(
+        (startX + 2 * midX) / 3,
+        (startY + 2 * midY) / 3,
+        (2 * midX + endX) / 3,
+        (2 * midY + endY) / 3,
+        endX,
+        endY
+    )
 }

@@ -1,0 +1,53 @@
+name: Publish Library
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      - name: Grant Gradlew Permission
+        run: chmod +x gradlew
+
+      - name: Create KeyRingFile File
+        run: |
+          echo "$PGP_PRIVATE_KEY" | gpg --dearmor > secring.gpg
+          if ! test -f secring.gpg; then
+            echo "secring.gpg not found"
+            exit 1
+          fi
+        env:
+          PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
+
+      - name: Publish Library to Maven Central
+        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
+        env:
+          mavenCentralUsername: ${{ secrets.OSSRH_USERNAME }}
+          mavenCentralPassword: ${{ secrets.OSSRH_PASSWORD }}
+          signing.keyId: ${{ secrets.PGP_KEY_ID }}
+          signing.password: ${{ secrets.PGP_PRIVATE_KEY }}
+          signing.secretKeyRingFile: secring.gpg
+
+      - name: Delete KeyRingFile File
+        run: rm -f secring.gpg

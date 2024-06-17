@@ -26,6 +26,7 @@ render.experimental.xml
 *.jks
 *.keystore
 *.asc
+*.gpg
 *.properties
 secrets/
 

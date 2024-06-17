@@ -12,7 +12,6 @@ object Config {
     const val versionName: String = "1.06"
 
     // Library configuration
-    val ARTEFACT_ID: String = PACKAGE_NAME.substringAfterLast(delimiter = ".")
-    const val VERSION: String = "$versionName.$versionCode-SNAPSHOT"
-    const val GROUP_ID: String = PACKAGE_NAME
+    private const val SNAPSHOT: String = "" //"-SNAPSHOT"
+    const val VERSION: String = "$versionName.$versionCode$SNAPSHOT"
 }

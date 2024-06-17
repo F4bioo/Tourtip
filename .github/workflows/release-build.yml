@@ -91,7 +91,7 @@ jobs:
       - name: Create APK Build Artifacts Folder
         run: mkdir -p apk-build-artifacts
 
-      - name: Move APK Builds Files to apk-build-artifacts
+      - name: Move APK Build File to apk-build-artifacts
         run: mv app/build/outputs/apk/release/app-release-unsigned.apk apk-build-artifacts/app-release-unsigned.apk
 
       - name: List Upload APK Build Artifacts
@@ -104,13 +104,20 @@ jobs:
           name: apk-build
           path: apk-build-artifacts
 
-  aar-build:
+  lib-build:
     needs: lib-version
-    name: AAR Build
+    name: LIB Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-maven-
 
       - name: Cache Gradle dependencies
         uses: actions/cache@v2
@@ -130,66 +137,44 @@ jobs:
       - name: Grant Gradlew Permission
         run: chmod +x gradlew
 
-      - name: Build AAR Library
-        run: ./gradlew publishReleasePublicationToMavenLocal
+      - name: Download LIB Version Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: lib-version
+          path: lib-version-artifacts
+
+      - name: List Download LIB Version Artifacts
+        run: ls -l lib-version-artifacts
+
+      - name: Read Release Tag File
+        run: echo "RELEASE_TAG=$(cat lib-version-artifacts/release_tag.txt)" >> $GITHUB_ENV
+
+      - name: Build LIB files
+        run: ./gradlew publishMavenPublicationToMavenLocal
         env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          PGP_KEY_ID: ${{ secrets.PGP_KEY_ID }}
           PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
 
-      - name: Create AAR Build Artifacts Folder
-        run: mkdir -p aar-build-artifacts
+      - name: Create LIB Build Artifacts Folder
+        run: mkdir -p lib-build-artifacts
 
-      - name: Move AAR Builds Files to aar-build-artifacts
-        run: mv tourtip/build/outputs/aar/tourtip-release.aar aar-build-artifacts/tourtip-release.aar
+      - name: Move LIB Build Files to lib-build-artifacts
+        run: cp ~/.m2/repository/com/fappslab/tourtip/tourtip/${{ env.RELEASE_TAG }}/* lib-build-artifacts/
 
-      - name: List Upload AAR Build Artifacts
-        run: ls -l aar-build-artifacts
+      - name: List Upload LIB Build Artifacts
+        run: ls -l lib-build-artifacts
 
-      - name: Upload AAR Build Artifacts
+      - name: Upload LIB Build Artifacts
         uses: actions/upload-artifact@v3
         with:
           retention-days: 1
-          name: aar-build
-          path: aar-build-artifacts
+          name: lib-build
+          path: lib-build-artifacts
 
-  sign-pgp:
-    needs: aar-build
-    name: Sign PGP
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Download AAR Build Artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: aar-build
-          path: aar-build-artifacts
-
-      - name: List Download AAR Build Artifacts
-        run: ls -l aar-build-artifacts
-
-      - name: Import PGP Key
-        run: echo "${{ secrets.PGP_PRIVATE_KEY }}" | gpg --batch --import
-
-      - name: Sign AAR with PGP
-        run: echo "${{ secrets.PGP_PASSPHRASE }}" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --armor --detach-sign aar-build-artifacts/tourtip-release.aar
-
-      - name: List PGP Sign AAR Build Artifacts
-        run: ls -l aar-build-artifacts
-
-      - name: Upload PGP Sign Build Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          retention-days: 1
-          name: sign-pgp
-          path: aar-build-artifacts
-
-  lib-deploy:
-    needs: sign-pgp
-    name: App Deploy
+  create-release:
+    needs: [apk-build, lib-build]
+    name: Create Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -227,11 +212,11 @@ jobs:
           name: apk-build
           path: apk-build-artifacts
 
-      - name: Download AAR Build Artifacts
+      - name: Download LIB Build Artifacts
         uses: actions/download-artifact@v3
         with:
-          name: sign-pgp
-          path: aar-build-artifacts
+          name: lib-build
+          path: lib-build-artifacts
 
       - name: List Download LIB Version Artifacts
         run: ls -l lib-version-artifacts
@@ -239,8 +224,8 @@ jobs:
       - name: List Download APK Build Artifacts
         run: ls -l apk-build-artifacts
 
-      - name: List Download AAR Build Artifacts
-        run: ls -l aar-build-artifacts
+      - name: List Download LIB Build Artifacts
+        run: ls -l lib-build-artifacts
 
       - name: Read Release Tag File
         run: echo "RELEASE_TAG=$(cat lib-version-artifacts/release_tag.txt)" >> $GITHUB_ENV
@@ -281,30 +266,20 @@ jobs:
           asset_name: tourtip-sample-v${{ env.RELEASE_TAG }}-unsigned.apk
           asset_content_type: application/vnd.android.package-archive
 
-      - name: Upload AAR Release Asset
+      - name: Upload LIB Release Assets
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: aar-build-artifacts/tourtip-release.aar
-          asset_name: tourtip-v${{ env.RELEASE_TAG }}.aar
-          asset_content_type: application/java-archive
+          asset_path: lib-build-artifacts/
+          asset_name: tourtip-v${{ env.RELEASE_TAG }}
+          asset_content_type: application/zip
 
-      - name: Upload PGP Signature Release Asset for AAR
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: aar-build-artifacts/tourtip-release.aar.asc
-          asset_name: tourtip-v${{ env.RELEASE_TAG }}.aar.asc
-          asset_content_type: application/pgp-signature
-
-      - name: Publish Library to Maven Central
-        run: ./gradlew publishReleasePublicationToSonatypeRepository
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
-          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+      - name: Delete Release Artifacts
+        run: |
+          rm -rf lib-version-artifacts
+          rm -rf apk-build-artifacts
+          rm -rf lib-build-artifacts
+          rm -f FINAL_RELEASE_NOTES.md
+          rm -f TEMP_RELEASE_NOTES.md
